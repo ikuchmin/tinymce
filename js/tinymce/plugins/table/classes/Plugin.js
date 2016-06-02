@@ -430,6 +430,10 @@ define("tinymce/tableplugin/Plugin", [
 					resizeBars.clearBars();
 				}
 				grid.deleteTable();
+			},
+
+			mceTableSelectCells: function(grid) {
+				grid.selectCells();
 			}
 		}, function(func, name) {
 			editor.addCommand(name, function() {
@@ -539,6 +543,11 @@ define("tinymce/tableplugin/Plugin", [
 				onclick: cmd('mceTableDeleteCol')
 			});
 
+			editor.addButton('tableselectcells', {
+				title: 'Select cells',
+				onclick: cmd('mceTableSelectCells')
+			});
+
 		}
 
 		function isTable(table) {
@@ -556,7 +565,7 @@ define("tinymce/tableplugin/Plugin", [
 			}
 
 			if (!toolbarItems) {
-				toolbarItems = 'tableprops tabledelete | ' +
+				toolbarItems = 'tableselectcells | tableprops tabledelete | ' +
 					'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
 					'tableinsertcolbefore tableinsertcolafter tabledeletecol';
 			}

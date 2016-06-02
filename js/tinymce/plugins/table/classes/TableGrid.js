@@ -560,6 +560,12 @@ define("tinymce/tableplugin/TableGrid", [
 			return cells;
 		}
 
+		function selectCells() {
+			getSelectedCells(grid).forEach(function(el) {
+				editor.dom.addClass(el.elm, "ttp-chosenblock");
+			});
+		}
+
 		function deleteCols() {
 			var cols = [];
 
@@ -936,6 +942,7 @@ define("tinymce/tableplugin/TableGrid", [
 			copyRows: copyRows,
 			pasteRows: pasteRows,
 			getPos: getPos,
+			selectCells: selectCells,
 			setStartCell: setStartCell,
 			setEndCell: setEndCell,
 			moveRelIdx: moveRelIdx,
