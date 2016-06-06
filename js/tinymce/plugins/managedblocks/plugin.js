@@ -11,8 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('managedblocks', function(editor, url) {
-    var cssId, managedBlocksMenuItem, enabled;
-    console.log(arguments);
+	var cssId, managedBlocksMenuItem, enabled;
 
 	// We don't support older browsers like IE6/7 and they don't provide prototypes for DOM objects
 	if (!window.NodeList) {
@@ -30,47 +29,40 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 	}
 
-    function computeLogicalBlock(element) {
-		
-	console.log(element);	
-	
-	var cell = editor.dom.getParent(element, 'td');
-	console.log(cell);
-	if (cell != null) {
-	    return cell;
-	} 
-	
-	var cellUL = editor.dom.getParent(element, 'ul');
-	if (cellUL != null) {
-	    return cellUL;
-	}	
-	
-	var cellOL = editor.dom.getParent(element, 'ol');
-	if (cellOL != null) {
-	    return cellOL;
-	}	
-	
-	return element;
-	
-    };
-    
-    editor.addCommand('ttpChooseLogicalBlock', function() {
-	document.ttpRange = editor.selection.getRng();
-	document.ttpSel = editor.selection.getSel();
-	var logicalBlock = computeLogicalBlock(editor.selection.getNode());
-	editor.dom.addClass(logicalBlock, 'ttp-chosenblock');
-    });
-    
-        editor.addCommand('mceManagedBlocks', function() {
+	function computeLogicalBlock(element) {
+		var cell = editor.dom.getParent(element, 'td');
+		if (cell != null) {
+			return cell;
+		}
+		var cellUL = editor.dom.getParent(element, 'ul');
+		if (cellUL != null) {
+			return cellUL;
+		}
+
+		var cellOL = editor.dom.getParent(element, 'ol');
+		if (cellOL != null) {
+			return cellOL;
+		}
+
+		return element;
+	}
+
+	editor.addCommand('ttpChooseLogicalBlock', function() {
+		document.ttpRange = editor.selection.getRng();
+		document.ttpSel = editor.selection.getSel();
+		var logicalBlock = computeLogicalBlock(editor.selection.getNode());
+		editor.dom.addClass(logicalBlock, 'ttp-chosenblock');
+	});
+
+	editor.addCommand('mceManagedBlocks', function() {
 		var dom = editor.dom, linkElm;
 
 		if (!cssId) {
-		    cssId = dom.uniqueId();
-		    console.log('url: ' + url);
+			cssId = dom.uniqueId();
 			linkElm = dom.create('link', {
 				id: cssId,
-			        rel: 'stylesheet',
-			        href: url + '/css/managedblocks.css'
+				rel: 'stylesheet',
+				href: url + '/css/managedblocks.css'
 			});
 
 			editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
@@ -96,16 +88,16 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	editor.addButton('managedblocks', {
 		title: 'Show managed blocks',
 		cmd: 'mceManagedBlocks',
-         	onPostRender: toggleActiveState,
-	        icon: true,
-	    	image: 'https://pdfimages.wondershare.com/pdfelement-mac/guide/icon-11-convert.png'
+		onPostRender: toggleActiveState,
+		icon: true,
+		image: 'https://pdfimages.wondershare.com/pdfelement-mac/guide/icon-11-convert.png'
 	});
 
-    	editor.addButton('ttpchooselogicalblock', {
+	editor.addButton('ttpchooselogicalblock', {
 		title: 'Choose logical block',
 		cmd: 'ttpChooseLogicalBlock',
-	        icon: true,
-	    image: 'https://d30y9cdsu7xlg0.cloudfront.net/png/37722-200.png'
+			icon: true,
+		image: 'https://d30y9cdsu7xlg0.cloudfront.net/png/37722-200.png'
 
 	});
 
@@ -120,8 +112,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 	editor.on('init', function() {
 		if (editor.settings.managedblocks_default_state) {
-		    editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
-		    //		    editor.execCommand('ttpChooseLogicalBlock', false, null, {skip_focus: true});
+			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
 		}
 	});
 
