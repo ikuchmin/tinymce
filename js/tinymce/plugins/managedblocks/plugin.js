@@ -29,29 +29,17 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 	}
 
-	function computeLogicalBlock(element) {
-		var cell = editor.dom.getParent(element, 'td');
-		if (cell != null) {
-			return cell;
+	function logicalBlock(element) {
+		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
+		if (checkOnTable == null) {
+			return function() { editor.dom.addClass(element, 'ttp-chosenblock'); };
+		} else {
+			return function() { editor.execCommand('mceTableSelectCells'); };
 		}
-		var cellUL = editor.dom.getParent(element, 'ul');
-		if (cellUL != null) {
-			return cellUL;
-		}
-
-		var cellOL = editor.dom.getParent(element, 'ol');
-		if (cellOL != null) {
-			return cellOL;
-		}
-
-		return element;
 	}
 
 	editor.addCommand('ttpChooseLogicalBlock', function() {
-		document.ttpRange = editor.selection.getRng();
-		document.ttpSel = editor.selection.getSel();
-		var logicalBlock = computeLogicalBlock(editor.selection.getNode());
-		editor.dom.addClass(logicalBlock, 'ttp-chosenblock');
+		logicalBlock(editor.selection.getNode())();
 	});
 
 	editor.addCommand('mceManagedBlocks', function() {
