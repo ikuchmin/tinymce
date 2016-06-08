@@ -32,10 +32,17 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	function logicalBlock(element) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
-			return function() { editor.dom.addClass(element, 'ttp-chosenblock'); };
+			return function() {
+				editor.fire('ttp-selectblock', [element], false);
+			};
 		} else {
 			return function() { editor.execCommand('mceTableSelectCells'); };
 		}
+	}
+
+	function removeClass(currentClasses, className, callback) {
+		var re = new RegExp(' ' + className + ' ', 'g');
+		return callback((' ' + currentClasses + ' ').replace(re, " ").trim());
 	}
 
 	editor.addCommand('ttpChooseLogicalBlock', function() {
@@ -73,6 +80,42 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		editor.fire('ManagedBlocks');
 	});
 
+	editor.addCommand('ttpProcessingBlocks', function() {
+		var blocks = editor.$(".ttp-chosenblock");
+		blocks.reduce = Array.prototype.reduce;
+		var maxAndFilterList = blocks.reduce(function(tupl, el) {
+			var max = tupl[0];
+			var arr = tupl[1];
+			if (el.hasAttribute("data-ttpid")) {
+				if (el.getAttribute("data-ttpid") > max) {
+					return [el.getAttribute("data-ttpid"), arr];
+				}
+
+				return tupl;
+			}
+
+			return [max, arr.concat(el)];
+		}, [0, []]);
+
+		var nextId = maxAndFilterList[0]++;
+		var procBlocks = maxAndFilterList[1];
+
+		var mk = editor.dom.create.bind(editor.dom);
+		var containerBlocks = procBlocks.map(function(block) {
+			var clearBlock = removeClass(block.className, 'ttp-chosenblock', function(clazz) {
+				block.className = clazz;
+				return block;
+			});
+			var or = mk('div', {'class': 'origin viewed'});
+			var bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processing'});
+
+			or.appendChild(clearBlock);
+			bl.appendChild(or);
+			return bl;
+		});
+		console.log(containerBlocks);
+	});
+
 	editor.addButton('managedblocks', {
 		title: 'Show managed blocks',
 		cmd: 'mceManagedBlocks',
@@ -106,5 +149,11 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 	editor.on('remove', function() {
 		editor.dom.removeClass(editor.getBody(), 'ttp-managedblocks');
+	});
+
+	editor.on('ttp-selectblock', function(selectedblocks) {
+		selectedblocks.forEach(function(block) {
+			editor.dom.addClass(block, 'ttp-chosenblock');
+		});
 	});
 });

@@ -561,9 +561,10 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 		function selectCells() {
-			getSelectedCells(grid).forEach(function(el) {
-				editor.dom.addClass(el.elm, "ttp-chosenblock");
+			var selectedCells = getSelectedCells(grid).map(function(el) {
+				return el.elm;
 			});
+			editor.fire('ttp-selectblock', selectedCells, false);
 		}
 
 		function deleteCols() {
