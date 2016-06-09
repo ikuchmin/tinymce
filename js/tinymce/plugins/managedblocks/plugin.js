@@ -32,8 +32,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	function logicalBlock(element) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
+			var elementP = editor.dom.getParent(element, 'p');
 			return function() {
-				editor.fire('ttp-selectblock', [element], false);
+				editor.fire('ttp-selectblock', [elementP], false);
 			};
 		} else {
 			return function() { editor.execCommand('mceTableSelectCells'); };
@@ -141,7 +142,13 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		prependToContext: true
 	});
 
+		
 	editor.on('init', function() {
+		var activateonstart = true;
+		
+		if(activateonstart)
+			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
+		
 		if (editor.settings.managedblocks_default_state) {
 			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
 		}
