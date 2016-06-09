@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8"/>
+    <title>Thinking Text Processor</title>
+  </head> 
+  <body>
+    <textarea>Easy! You should check out MoxieManager!
+	
+	
+	</textarea>
+    <script src="../js/tinymce/tinymce.js"></script>
+    <script src="../js/tinymce/plugins/managedblocks/plugin.js"></script>
+	<script src="../js/tinymce/plugins/loaddoc/plugin.js"></script>
+	<script src="../js/tinymce/plugins/loaddoc/docx2html.min.js"></script>
+	<script src="../js/tinymce/plugins/paste/plugin.js"></script>
+	<script src="data.js"></script>
+    <script>
+	var selectNum = 0;
+	
+	tinymce.init({ 
+	
+	selector:'textarea',
+	height: 500,
+	 <!-- contextmenu \\для отдалки пока уберем -->
+	 plugins: ["autolink link image table searchreplace fullpage managedblocks paste loaddoc"],
+	 toolbar1: "loaddoc newdocument  fullpage searchreplace  | undo redo | formatselect | bold italic underline | removeformat | alignleft aligncenter alignright alignjustify |  bullist numlist | outdent indent | link unlink image table | visualblocks  | managedblocks  | ttpchooselogicalblock | demoDoc",
+	  menubar: true,
+   toolbar_items_size: 'small',
+   managedblocks_default_state : true,
+   formats : {
+                customformat : {inline : 'span', styles : {'background-color': 'yellow'}, attributes : {title : 'selectToConvert'}}
+        },
+  setup: function (editor) {
+    editor.addButton('selectBlockButton', {
+      text: 'Выбрать блок',
+      icon: true,
+	  image: 'https://pdfimages.wondershare.com/pdfelement-mac/guide/icon-11-convert.png',
+      onclick: function (data) {
+		editor.selection.select(editor.selection.getEnd()(),true); // Выделяем блок
+		console.log('Content is: ' + editor.selection.getRng()); // получаем текст блока
+		editor.dom.addClass(editor.selection.getEnd()(), 'selected id_'+selectNum++); //добавляем класс с порядковым номером выбранной строкии
+		editor.formatter.apply('customformat',null,editor.selection.getEnd()()); // добавляем свой стиль к блоку(желтый фон)
+		<!-- editor.formatter.toggle('customformat',null,editor.selection.getNode()); --> // функция которая сможет переключать стиль
+      }
+    });
+	
+	editor.addButton('demoDoc', {
+      text: 'Демо документ',
+      icon: false,
+      onclick: function (data) {
+	  var startD = new Date();
+		editor.setContent(dataJS.html);
+		var endD = new Date();
+		console.log("total time to set Content: " + (endD - startD) + " ms");
+      }
+    });
+  }
+
+	});</script>
+  </body>  
+</html>

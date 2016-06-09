@@ -32,7 +32,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	function logicalBlock(element) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
-			var elementP = editor.dom.getParent(element, 'p');
+			var elementP = editor.dom.getParent(element, 'p'); // если элемент находится внутри P, то мы просто берем сразу родительский элемент
 			return function() {
 				editor.fire('ttp-selectblock', [elementP], false);
 			};
@@ -47,6 +47,28 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	}
 
 	editor.addCommand('ttpChooseLogicalBlock', function() {
+		
+		//Временное решение для выбора сразу нескольких элементов P
+		var sP = editor.dom.getParent(editor.selection.getStart(), 'p');
+		var eP = editor.dom.getParent(editor.selection.getEnd(), 'p');
+		var section = editor.selection.getNode().childNodes;
+		
+		var startSelect = false;
+		for(var i=0;i<section.length;i++){
+			if(section[i]==sP){
+				startSelect = true;
+			}
+			if(section[i]==eP){
+				logicalBlock(section[i])();
+				return;
+			}
+			
+			if(startSelect){
+				logicalBlock(section[i])();
+			}
+		}
+	
+		//Изначальный блок, до него не доходит, если мы выбрали несколько блоков
 		logicalBlock(editor.selection.getNode())();
 	});
 
@@ -144,11 +166,6 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 		
 	editor.on('init', function() {
-		var activateonstart = true;
-		
-		if(activateonstart)
-			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
-		
 		if (editor.settings.managedblocks_default_state) {
 			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
 		}
