@@ -47,12 +47,12 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	}
 
 	editor.addCommand('ttpChooseLogicalBlock', function() {
-		
+
 		//Временное решение для выбора сразу нескольких элементов P
 		var sP = editor.dom.getParent(editor.selection.getStart(), 'p');
 		var eP = editor.dom.getParent(editor.selection.getEnd(), 'p');
 		var section = editor.selection.getNode().childNodes;
-		
+
 		var startSelect = false;
 		for(var i=0;i<section.length;i++){
 			if(section[i]==sP){
@@ -103,40 +103,56 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		editor.fire('ManagedBlocks');
 	});
 
-	editor.addCommand('ttpProcessingBlocks', function() {
-		var blocks = editor.$(".ttp-chosenblock");
-		blocks.reduce = Array.prototype.reduce;
-		var maxAndFilterList = blocks.reduce(function(tupl, el) {
-			var max = tupl[0];
-			var arr = tupl[1];
-			if (el.hasAttribute("data-ttpid")) {
-				if (el.getAttribute("data-ttpid") > max) {
-					return [el.getAttribute("data-ttpid"), arr];
-				}
 
-				return tupl;
+	function reduceToFilterListAndMax(prevState, element) {
+		var max = prevState[0];
+		var arr = prevState[1];
+		if (element.hasAttribute("data-ttpid")) {
+			var possibleId = parseInt(element.getAttribute("data-ttpid"));
+			if (possibleId > max) {
+				return [possibleId, arr];
 			}
 
-			return [max, arr.concat(el)];
-		}, [0, []]);
+			return prevState;
+		}
 
-		var nextId = maxAndFilterList[0]++;
-		var procBlocks = maxAndFilterList[1];
+		return [max, arr.concat(element)];
+	}
 
-		var mk = editor.dom.create.bind(editor.dom);
-		var containerBlocks = procBlocks.map(function(block) {
+	function produceProcessedContainer(mk, initValueId) {
+		var nextId = initValueId;
+
+		return function(block) {
 			var clearBlock = removeClass(block.className, 'ttp-chosenblock', function(clazz) {
-				block.className = clazz;
-				return block;
+				var copy = block.cloneNode(true);
+				copy.className = clazz;
+				return copy;
 			});
 			var or = mk('div', {'class': 'origin viewed'});
-			var bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processing'});
+			var bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processingblock'});
 
 			or.appendChild(clearBlock);
 			bl.appendChild(or);
-			return bl;
-		});
-		console.log(containerBlocks);
+			return [block, bl];
+		};
+	}
+
+	editor.addCommand('ttpProcessingBlocks', function() {
+		var blocks = editor.$(".ttp-chosenblock, .ttp-processingblock");
+		blocks.reduce = Array.prototype.reduce;
+
+		var maxAndFilterList = blocks.reduce(reduceToFilterListAndMax, [0, []]);
+		var nextId = maxAndFilterList[0] + 1;
+		var procBlocks = maxAndFilterList[1];
+
+		var mk = editor.dom.create.bind(editor.dom);
+		procBlocks.map(produceProcessedContainer(mk, nextId))
+				  .forEach(function(tupl) {
+					  var block = tupl[0];
+					  var container = tupl[1];
+					  
+					  editor.dom.replace(container, block, false);
+				  });
 	});
 
 	editor.addButton('managedblocks', {
@@ -164,7 +180,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		prependToContext: true
 	});
 
-		
+
 	editor.on('init', function() {
 		if (editor.settings.managedblocks_default_state) {
 			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});

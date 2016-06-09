@@ -2,6 +2,10 @@
     background-color: yellow;
 }
 
+.ttp-managedblocks .ttp-processingblock {
+    background-color: #D7D09E;
+}
+
 .ttp-managedblocks p {
 	padding-top: 10px;
 	border: 1px dashed #BBB;
