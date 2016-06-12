@@ -134,20 +134,19 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			switch (block.nodeName) {
 				case 'TD':
 					content = [].slice.call(clearBlock.children); 
-
 					bl = clearBlock;
-					while (bl.firstChild) bl.removeChild(bl.firstChild);
-					editor.dom.addClass(bl, 'ttp-processingblock');
+					while (bl.firstChild) bl.removeChild(bl.firstChild); // remove children
 					break;
 				default:
 					content = [clearBlock];
-
-					bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processingblock'}); 
+					bl = mk('div', {}); 
 					break;
 			};
+
+			editor.dom.addClass(bl, 'ttp-processingblock');
+			editor.dom.setAttrib(bl, 'data-ttpid', nextId++);
 			
 			var or = mk('div', {'class': 'origin viewed'});
-
 			content.forEach(function(node) {	
 				or.appendChild(node);
 			})
