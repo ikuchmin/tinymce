@@ -212,8 +212,11 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	});
 
 	editor.on('ttp-selectblock', function(selectedblocks) {
+		var d = editor.dom;
 		selectedblocks.forEach(function(block) {
-			editor.dom.addClass(block, 'ttp-chosenblock');
+			if (!d.hasClass(block, 'ttp-processingblock') && !d.hasClass(block, 'ttp-processedblock')) {
+				editor.dom.addClass(block, 'ttp-chosenblock');
+			}
 		});
 	});
 });
