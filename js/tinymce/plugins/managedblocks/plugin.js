@@ -172,7 +172,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					  
 					  editor.dom.replace(container, block, false);
 					  editor.execCommand('mceDisableEditableBlock', false, [container]);
+					  return container;
 				  });
+		editor.fire('ttp-processingblock', procBlocks, false);
 	});
 
 	editor.addButton('managedblocks', {
