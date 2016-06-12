@@ -5,17 +5,17 @@
     <title>Thinking Text Processor</title>
   </head> 
   <body>
-    <textarea>Easy! You should check out MoxieManager!
-	
-	
-	</textarea>
-    <script src="../js/tinymce/tinymce.js"></script>
-    <script src="../js/tinymce/plugins/managedblocks/plugin.js"></script>
-	<script src="../js/tinymce/plugins/loaddoc/plugin.js"></script>
-	<script src="../js/tinymce/plugins/loaddoc/docx2html.min.js"></script>
-	<script src="../js/tinymce/plugins/paste/plugin.js"></script>
-	<script src="data.js"></script>
-    <script>
+      <textarea>
+		  <p class="mceNonEditable">Easy! You should check out MoxieManager!</p>
+		  <p> hey guys</p>
+	  </textarea>
+      <script src="../js/tinymce/tinymce.js"></script>
+      <script src="../js/tinymce/plugins/managedblocks/plugin.js"></script>
+	  <script src="../js/tinymce/plugins/loaddoc/plugin.js"></script>
+	  <script src="../js/tinymce/plugins/loaddoc/docx2html.min.js"></script>
+	  <script src="../js/tinymce/plugins/paste/plugin.js"></script>
+	  <script src="data.js"></script>
+      <script>
 	var selectNum = 0;
 	
 	tinymce.init({ 
@@ -23,7 +23,7 @@
 	selector:'textarea',
 	height: 500,
 	 <!-- contextmenu \\для отдалки пока уберем -->
-	 plugins: ["autolink link image table searchreplace fullpage managedblocks paste loaddoc"],
+	 plugins: ["autolink link image table searchreplace fullpage managedblocks paste loaddoc noneditable"],
 	 toolbar1: "loaddoc newdocument  fullpage searchreplace  | undo redo | formatselect | bold italic underline | removeformat | alignleft aligncenter alignright alignjustify |  bullist numlist | outdent indent | link unlink image table | visualblocks  | managedblocks  | ttpchooselogicalblock | demoDoc",
 	  menubar: true,
    toolbar_items_size: 'small',
