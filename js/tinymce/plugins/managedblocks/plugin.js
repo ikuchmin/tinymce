@@ -32,7 +32,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	function logicalBlock(element) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
-			var elementP = editor.dom.getParent(element, 'p'); // если элемент находится внутри P, то мы просто берем сразу родительский элемент
+			var elementP = editor.dom.getParent(element, 'p,ul,ol'); // если элемент находится внутри P, то мы просто берем сразу родительский элемент
 			return function() {
 				editor.fire('ttp-selectblock', [elementP], false);
 			};
