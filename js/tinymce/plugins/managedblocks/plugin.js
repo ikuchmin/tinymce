@@ -119,7 +119,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		return [max, arr.concat(element)];
 	}
 
-	function produceProcessedContainer(mk, initValueId) {
+	function produceProcessingContainer(mk, initValueId) {
 		var nextId = initValueId;
 
 		return function(block) {
@@ -128,10 +128,30 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 				copy.className = clazz;
 				return copy;
 			});
-			var or = mk('div', {'class': 'origin viewed'});
-			var bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processingblock'});
 
-			or.appendChild(clearBlock);
+			var bl;
+			var content;
+			switch (block.nodeName) {
+				case 'TD':
+					content = [].slice.call(clearBlock.children); 
+
+					bl = clearBlock;
+					while (bl.firstChild) bl.removeChild(bl.firstChild);
+					editor.dom.addClass(bl, 'ttp-processingblock');
+					break;
+				default:
+					content = clearBlock;
+
+					bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processingblock'}); 
+					break;
+			};
+			
+			var or = mk('div', {'class': 'origin viewed'});
+
+			content.forEach(function(node) {	
+				or.appendChild(node);
+			})
+
 			bl.appendChild(or);
 			return [block, bl];
 		};
@@ -146,7 +166,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var procBlocks = maxAndFilterList[1];
 
 		var mk = editor.dom.create.bind(editor.dom);
-		procBlocks.map(produceProcessedContainer(mk, nextId))
+		procBlocks.map(produceProcessingContainer(mk, nextId))
 				  .forEach(function(tupl) {
 					  var block = tupl[0];
 					  var container = tupl[1];
