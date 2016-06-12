@@ -48,17 +48,29 @@ tinymce.PluginManager.add('noneditable', function(editor) {
 		e.content = content;
 	}
 
-	editClass = " " + tinymce.trim(editor.getParam("noneditable_editable_class", "mceEditable")) + " ";
-	nonEditClass = " " + tinymce.trim(editor.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";
+	editClass = tinymce.trim(editor.getParam("noneditable_editable_class", "mceEditable"));
+	nonEditClass = tinymce.trim(editor.getParam("noneditable_noneditable_class", "mceNonEditable"));
 
-	var hasEditClass = hasClass(editClass);
-	var hasNonEditClass = hasClass(nonEditClass);
+	var hasEditClass = hasClass(" " + editClass + " ");
+	var hasNonEditClass = hasClass(" " + nonEditClass + " ");
 
 	nonEditableRegExps = editor.getParam("noneditable_regexp");
 	if (nonEditableRegExps && !nonEditableRegExps.length) {
 		nonEditableRegExps = [nonEditableRegExps];
 	}
 
+	editor.addCommand('mceDisableEditableBlock', function(ui, value) {
+		var dom = editor.dom;
+		
+		value.filter(function(element) {
+			return !dom.hasClass(element, nonEditClass);
+		}).forEach(function(element) {
+			if (!dom.hasClass(element, editClass)) editor.dom.addClass(element, nonEditClass);
+
+			editor.dom.setAttrib(element, contentEditableAttrName, false);
+		});
+	});
+	
 	editor.on('PreInit', function() {
 		if (nonEditableRegExps) {
 			editor.on('BeforeSetContent', convertRegExpsToNonEditable);

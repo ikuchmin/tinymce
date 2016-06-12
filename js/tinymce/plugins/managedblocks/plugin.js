@@ -140,7 +140,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					editor.dom.addClass(bl, 'ttp-processingblock');
 					break;
 				default:
-					content = clearBlock;
+					content = [clearBlock];
 
 					bl = mk('div', {'data-ttpid': nextId++, 'class': 'ttp-processingblock'}); 
 					break;
@@ -172,6 +172,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					  var container = tupl[1];
 					  
 					  editor.dom.replace(container, block, false);
+					  editor.execCommand('mceDisableEditableBlock', false, [container]);
 				  });
 	});
 
