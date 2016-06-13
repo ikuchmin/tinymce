@@ -40,6 +40,11 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			return function() { editor.execCommand('mceTableSelectCells'); };
 		}
 	}
+	
+	//Показать старый контент для сравнения
+	var showOriginContent = function() {
+		document.getElementsByClassName(editor.settings.managedblocks_div_to_comparison)[0].innerHTML = this.innerHTML;
+	}
 
 	function removeClass(currentClasses, className, callback) {
 		var re = new RegExp(' ' + className + ' ', 'g');
@@ -175,6 +180,13 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					  return container;
 				  });
 		editor.fire('ttp-processingblock', procBlocks, false);
+		
+		//Вешаем листнеры для просмотра обработанного контента//тег класса возможно надо изменить
+		var originElements = editor.$(".origin");
+
+		for (var i = 0; i < originElements.length; i++) {
+			originElements[i].parentElement.addEventListener('click', showOriginContent, false);
+		}
 	});
 
 	editor.addButton('managedblocks', {
