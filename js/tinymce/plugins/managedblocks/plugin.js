@@ -130,6 +130,25 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		return [max, arr.concat(element)];
 	}
 
+	function defaultMethodMapping(node) {
+		var clNode = node.cloneNode(true);
+		var tw = document.createTreeWalker(clNode, NodeFilter.SHOW_TEXT);
+		var nodeMapping = {};
+		var nextTextNodeId = 1;
+		while (tw.nextNode()) {
+			var txtNode = tw.currentNode;
+			var ttpTrackingId = this.currId + '.' + nextTextNodeId++;
+			editor.dom.setAttrib(txtNode.parentNode, 'data-ttpid', ttpTrackingId);
+			nodeMapping[ttpTrackingId] = txtNode.wholeText;
+		};
+
+		return [clNode, nodeMapping];
+	}
+	
+	function chooseMethodMapping() {
+		return defaultMethodMapping;
+	}
+
 	function produceProcessingContainer(mk, initValueId) {
 		var nextId = initValueId;
 
@@ -154,16 +173,29 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					break;
 			};
 
+			var currId = nextId++;
 			editor.dom.addClass(bl, 'ttp-processingblock');
-			editor.dom.setAttrib(bl, 'data-ttpid', nextId++);
+			editor.dom.setAttrib(bl, 'data-ttpid', currId);
 			
 			var or = mk('div', {'class': 'origin viewed'});
-			content.forEach(function(node) {	
+			content.forEach(function(node) {
 				or.appendChild(node);
 			})
 
+			var pr = mk('div', {'class': 'processed'});
+			var mapped = content
+				.map(chooseMethodMapping().bind({currId: currId}))
+				.reduce(function(acc, el) {
+					// Dirty hack
+					pr.appendChild(el[0]);
+
+					Object.assign(acc, el[1]);
+					return acc;
+				}, {});
+			
 			bl.appendChild(or);
-			return [block, bl];
+			bl.appendChild(pr);
+			return [block, bl, mapped];
 		};
 	}
 
@@ -176,16 +208,19 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var procBlocks = maxAndFilterList[1];
 
 		var mk = editor.dom.create.bind(editor.dom);
-		procBlocks.map(produceProcessingContainer(mk, nextId))
-				  .forEach(function(tupl) {
-					  var block = tupl[0];
-					  var container = tupl[1];
-					  
-					  editor.dom.replace(container, block, false);
-					  editor.execCommand('mceDisableEditableBlock', false, [container]);
-					  return container;
-				  });
-		editor.fire('ttp-processingblock', procBlocks, false);
+		var mapped = procBlocks
+			.map(produceProcessingContainer(mk, nextId))
+			.reduce(function(acc, tupl) {
+				var block = tupl[0];
+				var container = tupl[1];
+
+				editor.dom.replace(container, block, false);
+				editor.execCommand('mceDisableEditableBlock', false, [container]);
+
+				Object.assign(acc, tupl[2]);
+				return acc;
+			}, {});
+		editor.fire('ttp-processingblock', mapped, false);
 		
 		editor.selection.collapse();
 		
