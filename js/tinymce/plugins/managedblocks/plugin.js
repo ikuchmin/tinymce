@@ -46,6 +46,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var showElement = editor.dom.getParent(editor.selection.getNode(), 'div').parentNode;
 		
 		if(showElement && showElement.className=="ttp-processingblock"){
+			if(showElement.childNodes[1] && showElement.childNodes[1]=="processed")
+				document.getElementsByClassName(editor.settings.managedblocks_div_to_comparison)[0].innerHTML = showElement.childNodes[1].innerHTML;
 		}
 	}
 
