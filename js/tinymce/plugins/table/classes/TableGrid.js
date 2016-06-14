@@ -564,9 +564,43 @@ define("tinymce/tableplugin/TableGrid", [
 			var selectedCells = getSelectedCells(grid).map(function(el) {
 				return el.elm;
 			});
+			
 			editor.fire('ttp-selectblock', selectedCells, false);
 		}
+		
+		function selectTable() {
+			var selectedCells = getAllCells(grid).map(function(el) {
+				return el.elm;
+			});
+			
+			editor.fire('ttp-selectblock', selectedCells, false);
+		}
+		
+		function selectRow() {
+			editor.fire('ttp-selectblock', getSelectedCells(grid)[0].elm.parentNode.childNodes, false);
+		}
+		
+		function selectColumn() {
+			var posX;
 
+			// Find position
+			each(grid, function(row) {
+				each(row, function(cell, x) {
+					if (isCellSelected(cell)) {
+						posX = x;
+					}
+				});
+			});
+			
+			
+			var selectedCells = [];
+			for(var i in grid){
+				selectedCells.push(grid[i][posX].elm)
+			}
+			
+			editor.fire('ttp-selectblock', selectedCells, false);
+		}
+		
 		function deleteCols() {
 			var cols = [];
 
@@ -944,6 +978,9 @@ define("tinymce/tableplugin/TableGrid", [
 			pasteRows: pasteRows,
 			getPos: getPos,
 			selectCells: selectCells,
+			selectTable: selectTable,
+			selectRow: selectRow,
+			selectColumn: selectColumn,
 			setStartCell: setStartCell,
 			setEndCell: setEndCell,
 			moveRelIdx: moveRelIdx,

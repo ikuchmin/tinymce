@@ -434,7 +434,22 @@ define("tinymce/tableplugin/Plugin", [
 
 			mceTableSelectCells: function(grid) {
 				grid.selectCells();
+			},
+			
+			mceTableSelectRow: function(grid) {
+				grid.selectRow();
+			},
+			
+			mceTableSelectTable: function(grid) {
+				grid.selectTable();
+			},
+			
+			mceTableSelectColumn: function(grid) {
+				grid.selectColumn();
 			}
+			
+			
+			
 		}, function(func, name) {
 			editor.addCommand(name, function() {
 				var grid = new TableGrid(editor);
@@ -547,6 +562,21 @@ define("tinymce/tableplugin/Plugin", [
 				title: 'Select cells',
 				onclick: cmd('mceTableSelectCells')
 			});
+			
+			editor.addButton('tableselecttable', {
+				title: 'Select table',
+				onclick: cmd('mceTableSelectTable')
+			});
+			
+			editor.addButton('tableselectcolumn', {
+				title: 'Select column',
+				onclick: cmd('mceTableSelectColumn')
+			});
+			
+			editor.addButton('tableselectrow', {
+				title: 'Select row',
+				onclick: cmd('mceTableSelectRow')
+			});
 
 		}
 
@@ -565,7 +595,7 @@ define("tinymce/tableplugin/Plugin", [
 			}
 
 			if (!toolbarItems) {
-				toolbarItems = 'tableselectcells | tableprops tabledelete | ' +
+				toolbarItems = 'tableselecttable tableselectcolumn tableselectrow tableselectcells | tableprops tabledelete | ' +
 					'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
 					'tableinsertcolbefore tableinsertcolafter tabledeletecol';
 			}
