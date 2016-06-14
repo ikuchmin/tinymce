@@ -43,7 +43,10 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	
 	//Показать старый контент для сравнения
 	var showOriginContent = function() {
-		document.getElementsByClassName(editor.settings.managedblocks_div_to_comparison)[0].innerHTML = this.innerHTML;
+		var showElement = editor.dom.getParent(editor.selection.getNode(), 'div').parentNode;
+		
+		if(showElement && showElement.className=="ttp-processingblock"){
+		}
 	}
 
 	function removeClass(currentClasses, className, callback) {
@@ -59,17 +62,18 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var section = editor.selection.getNode().childNodes;
 
 		var startSelect = false;
+		
 		for(var i=0;i<section.length;i++){
-			if(section[i]==sP){
-				startSelect = true;
-			}
-			if(section[i]==eP){
-				logicalBlock(section[i])();
-				return;
-			}
-			
 			if(startSelect){
 				logicalBlock(section[i])();
+				if(section[i]==eP){
+					return;
+				}
+			}else{
+				if(section[i]==sP){
+					startSelect = true;
+					logicalBlock(section[i])();
+				}
 			}
 		}
 	
@@ -181,12 +185,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 				  });
 		editor.fire('ttp-processingblock', procBlocks, false);
 		
-		//Вешаем листнеры для просмотра обработанного контента//тег класса возможно надо изменить
-		var originElements = editor.$(".origin");
-
-		for (var i = 0; i < originElements.length; i++) {
-			originElements[i].parentElement.addEventListener('click', showOriginContent, false);
-		}
+		editor.selection.collapse();
+		
 	});
 
 	editor.addButton('managedblocks', {
@@ -216,6 +216,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 
 	editor.on('init', function() {
+		editor.iframeElement.contentDocument.addEventListener('click', showOriginContent, false);
+		
 		if (editor.settings.managedblocks_default_state) {
 			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
 		}
