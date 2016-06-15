@@ -43,6 +43,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	
 	//Показать старый контент для сравнения
 	var showOriginContent = function() {
+		if(!editor.dom.getParent(editor.selection.getNode(), 'div'))
+			return;
+		
 		var showElement = editor.dom.getParent(editor.selection.getNode(), 'div').parentNode;
 		
 		if(showElement && showElement.className=="ttp-processingblock"){
