@@ -133,23 +133,27 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		return [max, arr.concat(element)];
 	}
 
-	function defaultMethodMapping(node) {
-		var clNode = node.cloneNode(true);
-		var tw = document.createTreeWalker(clNode, NodeFilter.SHOW_TEXT);
-		var nodeMapping = {};
+	function defaultMethodMapping() {
 		var nextTextNodeId = 1;
-		while (tw.nextNode()) {
-			var txtNode = tw.currentNode;
-			var ttpTrackingId = this.currId + '.' + nextTextNodeId++;
-			editor.dom.setAttrib(txtNode.parentNode, 'data-ttpid', ttpTrackingId);
-			nodeMapping[ttpTrackingId] = txtNode.wholeText;
-		};
 
-		return [clNode, nodeMapping];
+		return function(node) {
+			var clNode = node.cloneNode(true);
+			var tw = document.createTreeWalker(clNode, NodeFilter.SHOW_TEXT);
+			var nodeMapping = {};
+
+			while (tw.nextNode()) {
+				var txtNode = tw.currentNode;
+				var ttpTrackingId = this.currId + '.' + nextTextNodeId++;
+				editor.dom.setAttrib(txtNode.parentNode, 'data-ttpid', ttpTrackingId);
+				nodeMapping[ttpTrackingId] = txtNode.wholeText;
+			}
+
+			return [clNode, nodeMapping];
+		};
 	}
-	
+
 	function chooseMethodMapping() {
-		return defaultMethodMapping;
+		return defaultMethodMapping();
 	}
 
 	function produceProcessingContainer(mk, initValueId) {
@@ -166,24 +170,24 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			var content;
 			switch (block.nodeName) {
 				case 'TD':
-					content = [].slice.call(clearBlock.children); 
+					content = [].slice.call(clearBlock.children);
 					bl = clearBlock;
 					while (bl.firstChild) bl.removeChild(bl.firstChild); // remove children
 					break;
 				default:
 					content = [clearBlock];
-					bl = mk('div', {}); 
+					bl = mk('div', {});
 					break;
-			};
+			}
 
 			var currId = nextId++;
 			editor.dom.addClass(bl, 'ttp-processingblock');
 			editor.dom.setAttrib(bl, 'data-ttpid', currId);
-			
+
 			var or = mk('div', {'class': 'origin viewed'});
 			content.forEach(function(node) {
 				or.appendChild(node);
-			})
+			});
 
 			var pr = mk('div', {'class': 'processed'});
 			var mapped = content
@@ -195,7 +199,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					Object.assign(acc, el[1]);
 					return acc;
 				}, {});
-			
+
 			bl.appendChild(or);
 			bl.appendChild(pr);
 			return [block, bl, mapped];
