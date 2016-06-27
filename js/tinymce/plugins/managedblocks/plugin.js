@@ -28,6 +28,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		});
 
 	}
+	
 
 	function logicalBlock(element) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
@@ -175,6 +176,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			switch (block.nodeName) {
 				case 'TD':
 					content = [].slice.call(clearBlock.children);
+				
 					bl = clearBlock;
 					while (bl.firstChild) bl.removeChild(bl.firstChild); // remove children
 					break;
@@ -199,11 +201,12 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 				.reduce(function(acc, el) {
 					// Dirty hack
 					pr.appendChild(el[0]);
-
 					Object.assign(acc, el[1]);
+					
 					return acc;
 				}, {});
 
+			
 			bl.appendChild(or);
 			bl.appendChild(pr);
 			return [block, bl, mapped];
@@ -219,21 +222,25 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var procBlocks = maxAndFilterList[1];
 
 		var mk = editor.dom.create.bind(editor.dom);
+		var dataToDecode = {};
 		var mapped = procBlocks
 			.map(produceProcessingContainer(mk, nextId))
 			.reduce(function(acc, tupl) {
 				var block = tupl[0];
 				var container = tupl[1];
-
+				
 				editor.dom.replace(container, block, false);
 				editor.execCommand('mceDisableEditableBlock', false, [container]);
 
 				Object.assign(acc, tupl[2]);
+				Object.assign(dataToDecode, tupl[2]);
+				
 				return acc;
 			}, {});
 		editor.fire('ttp-processingblock', mapped, false);
-		
+		console.log(dataToDecode);
 		editor.selection.collapse();
+		editor.settings.webActions.sendData(dataToDecode);
 		
 	});
 
