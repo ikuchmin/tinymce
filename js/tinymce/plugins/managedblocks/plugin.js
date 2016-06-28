@@ -33,13 +33,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	function logicalBlock(element) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
-			var elementP = editor.dom.getParent(element, 'p,ul,ol'); // если элемент находится внутри P, то мы просто берем сразу родительский элемент
-			while(elementP.parentNode.nodeName != "BODY"){
-				elementP = elementP.parentNode
-			}
-			
 			return function() {
-				editor.fire('ttp-selectblock', [elementP], false);
+				editor.fire('ttp-selectblock', [element], false);
 			};
 		} else {
 			return function() { editor.execCommand('mceTableSelectCells'); };
@@ -64,16 +59,22 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		return callback((' ' + currentClasses + ' ').replace(re, " ").trim());
 	}
 
+	function getRootElement(element){
+		while(element.parentNode.nodeName != "BODY"){
+				element = element.parentNode
+		}
+		return element;
+	}
+	
 	editor.addCommand('ttpChooseLogicalBlock', function() {
-
-		//Временное решение для выбора сразу нескольких элементов P
-		var sP = editor.dom.getParent(editor.selection.getStart(), 'p');
-		var eP = editor.dom.getParent(editor.selection.getEnd(), 'p');
+		var sP = getRootElement(editor.selection.getStart())
+		var eP = getRootElement(editor.selection.getEnd())
 		var section = editor.selection.getNode().childNodes;
-
+		
 		var startSelect = false;
 		
 		for(var i=0;i<section.length;i++){
+			
 			if(startSelect){
 				logicalBlock(section[i])();
 				if(section[i]==eP){
