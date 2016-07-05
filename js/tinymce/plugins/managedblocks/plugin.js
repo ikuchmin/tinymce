@@ -41,17 +41,11 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		}
 	}
 	
-	//Показать старый контент для сравнения
 	var showOriginContent = function() {
 		if(!editor.dom.getParent(editor.selection.getNode(), 'div'))
 			return;
-		
-		var showElement = editor.dom.getParent(editor.selection.getNode(), 'div').parentNode;
-		
-		if(showElement && showElement.className=="ttp-processingblock"){
-			if(showElement.childNodes[1] && showElement.childNodes[1]=="processed")
-				document.getElementsByClassName(editor.settings.managedblocks_div_to_comparison)[0].innerHTML = showElement.childNodes[1].innerHTML;
-		}
+			
+		editor.settings.ppA.showHiddenElementContent(editor.selection.getNode());	
 	}
 
 	function removeClass(currentClasses, className, callback) {
@@ -239,7 +233,6 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 				return acc;
 			}, {});
 		editor.fire('ttp-processingblock', mapped, false);
-		console.log(dataToDecode);
 		editor.selection.collapse();
 		editor.settings.webActions.sendData(dataToDecode);
 		
