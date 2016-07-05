@@ -8,6 +8,7 @@ Building TinyMCE
 3. Write "npm i -g grunt-cli" to install the grunt command line tool globally.
 4. Write "npm i" to install all package dependencies.
 4. Build TinyMCE by writing "grunt"
+5. Build, with skipping tests "grunt force-build"
 
 Build tasks
 ------------
