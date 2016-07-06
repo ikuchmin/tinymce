@@ -34,6 +34,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
 			return function() {
+				element = getRootElement(element);
 				editor.fire('ttp-selectblock', [element], false);
 			};
 		} else {
@@ -42,8 +43,10 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	}
 	
 	var showOriginContent = function() {
-		if(!editor.dom.getParent(editor.selection.getNode(), 'div'))
+		if(!editor.dom.getParent(editor.selection.getNode(), 'div')){
+			editor.settings.ppA.clearComparisonPanel();
 			return;
+		}
 			
 		editor.settings.ppA.showHiddenElementContent(editor.selection.getNode());	
 	}
@@ -137,12 +140,13 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var nextTextNodeId = 1;
 
 		return function(node) {
+			
 			var clNode = node.cloneNode(true);
 			var tw = document.createTreeWalker(clNode, NodeFilter.SHOW_TEXT);
 			var nodeMapping = {};
-
+	
 			while (tw.nextNode()) {
-				var txtNode = tw.currentNode;
+				var txtNode = tw.currentNode;			
 				var ttpTrackingId = this.currId + '.' + nextTextNodeId++;
 				editor.dom.setAttrib(txtNode.parentNode, 'data-ttpid', ttpTrackingId);
 				nodeMapping[ttpTrackingId] = txtNode.wholeText;
@@ -151,9 +155,49 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			return [clNode, nodeMapping];
 		};
 	}
+	
+	function defaultMethodMappingMod() {
+		var nextTextNodeId = 1;
+		return function(node) {
+			var clNode = node.cloneNode(true);
+			var nodeMapping = {};
+			
+			mapNodes(clNode,this.currId+'.' + nextTextNodeId++,nodeMapping);
+			
+			return [clNode, nodeMapping];
+		};
+	}
+	
+	function mapNodes(clNode,masterLevel,nodeMapping){
+		
+		for(var i=0; i<clNode.childNodes.length;i++){
+			node = clNode.childNodes[i];
+			editor.dom.setAttrib(node, 'data-ttpid', masterLevel+"."+(i+1));
+			if(node.childNodes.length>0) {
+				mapNodes(node,masterLevel+"."+(i+1),nodeMapping)
+			}else{
+				if(node.parentNode.childNodes.length==1)
+					{
+						var ttpTrackingId = masterLevel;
+						editor.dom.setAttrib(node.parentNode, 'data-ttpid', ttpTrackingId);
+						nodeMapping[ttpTrackingId] = node.wholeText;
+					}else{
+						var parNode = node.parentNode;
+						var sp1 = document.createElement("span");
+						var sp1_content = document.createTextNode(node.data);
+						sp1.appendChild(sp1_content);
+						node.parentNode.replaceChild(sp1, node);
+						
+						var ttpTrackingId = masterLevel+"."+(i+1);
+						editor.dom.setAttrib(sp1, 'data-ttpid', ttpTrackingId);
+						nodeMapping[ttpTrackingId] = sp1.innerText;
+					}
+			}		
+		}
+	}
 
 	function chooseMethodMapping() {
-		return defaultMethodMapping();
+		return defaultMethodMappingMod();
 	}
 
 	function produceProcessingContainer(mk, initValueId) {
@@ -165,7 +209,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 				copy.className = clazz;
 				return copy;
 			});
-
+			
 			var bl;
 			var content;
 			switch (block.nodeName) {
@@ -211,10 +255,10 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	editor.addCommand('ttpProcessingBlocks', function() {
 		var blocks = editor.$(".ttp-chosenblock, .ttp-processingblock");
 		blocks.reduce = Array.prototype.reduce;
-
+	
 		var maxAndFilterList = blocks.reduce(reduceToFilterListAndMax, [0, []]);
 		var nextId = maxAndFilterList[0] + 1;
-		var procBlocks = maxAndFilterList[1];
+		var procBlocks = maxAndFilterList[1];		
 
 		var mk = editor.dom.create.bind(editor.dom);
 		var dataToDecode = {};
