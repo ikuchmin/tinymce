@@ -172,7 +172,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		
 		for(var i=0; i<clNode.childNodes.length;i++){
 			node = clNode.childNodes[i];
-			editor.dom.setAttrib(node, 'data-ttpid', masterLevel+"."+(i+1));
+			//editor.dom.setAttrib(node, 'data-ttpid', masterLevel+"."+(i+1));
+			//editor.dom.setAttrib(node, 'data-process-status', 'preprocess');
 			if(node.childNodes.length>0) {
 				mapNodes(node,masterLevel+"."+(i+1),nodeMapping)
 			}else{
@@ -180,6 +181,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					{
 						var ttpTrackingId = masterLevel;
 						editor.dom.setAttrib(node.parentNode, 'data-ttpid', ttpTrackingId);
+						editor.dom.setAttrib(node.parentNode, 'data-process-status', 'preprocess');
 						nodeMapping[ttpTrackingId] = node.wholeText;
 					}else{
 						var parNode = node.parentNode;
@@ -190,6 +192,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 						
 						var ttpTrackingId = masterLevel+"."+(i+1);
 						editor.dom.setAttrib(sp1, 'data-ttpid', ttpTrackingId);
+						editor.dom.setAttrib(sp1, 'data-process-status', 'preprocess');
 						nodeMapping[ttpTrackingId] = sp1.innerText;
 					}
 			}		
@@ -258,7 +261,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	
 		var maxAndFilterList = blocks.reduce(reduceToFilterListAndMax, [0, []]);
 		var nextId = maxAndFilterList[0] + 1;
-		var procBlocks = maxAndFilterList[1];		
+		var procBlocks = maxAndFilterList[1];
+		
+		
 
 		var mk = editor.dom.create.bind(editor.dom);
 		var dataToDecode = {};
