@@ -1,13 +1,21 @@
 .ttp-managedblocks .ttp-chosenblock {
-    background-color: yellow;
+    background-color: rgba(101, 176, 228, 0.64);
 }
 
 .ttp-managedblocks .ttp-processingblock {
-    background-color: #D7D09E;
+    background-color: rgba(14, 104, 167, 0.81);
 }
 
 .ttp-managedblocks .ttp-processingblock .processed {
     display: none;
+}
+
+.ttp-managedblocks .ttp-processedblock .processed {
+    display: none;
+}
+
+.ttp-processedblock{
+	background-color: greenyellow;
 }
 
 .ttp-managedblocks p {
@@ -18,11 +26,15 @@
 }
 
 .ttp-managedblocks p:hover {
-    background-color: #FFFFCC
+    background-color: rgba(234, 234, 36, 0.66);
+}
+
+.ttp-managedblocks ul:hover {
+    background-color: rgba(234, 234, 36, 0.66);
 }
 
 .ttp-managedblocks td:hover {
-    background-color: #FFFFCC
+    background-color: rgba(234, 234, 36, 0.66);
 }
 
 .ttp-managedblocks .ttp-chosenblock h1 {
