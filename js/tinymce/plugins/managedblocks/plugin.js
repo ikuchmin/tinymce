@@ -71,22 +71,22 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var startSelect = false;
 		
 		for(var i=0;i<section.length;i++){
-			
-			if(startSelect){
-				logicalBlock(section[i])();
-				if(section[i]==eP){
-					return;
-				}
-			}else{
-				if(section[i]==sP){
-					startSelect = true;
+			if(!editor.dom.hasClass(section[i], 'mce-item-table','mce-resize-bar','mce-resize-bar-row')){
+				if(startSelect){
 					logicalBlock(section[i])();
+					if(section[i]==eP){
+						return;
+					}
+				}else{
+					if(section[i]==sP){
+						startSelect = true;
+						logicalBlock(section[i])();
+					}
 				}
 			}
 		}
 	
-		//Изначальный блок, до него не доходит, если мы выбрали несколько блоков
-		logicalBlock(editor.selection.getNode())();
+		if(!startSelect) logicalBlock(editor.selection.getNode())();
 	});
 
 	editor.addCommand('mceManagedBlocks', function() {
@@ -124,7 +124,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	function reduceToFilterListAndMax(prevState, element) {
 		var max = prevState[0];
 		var arr = prevState[1];
-		if (element.hasAttribute("data-ttpid")) {
+		if (element.hasAttribute("data-ttpid") ) {
 			var possibleId = parseInt(element.getAttribute("data-ttpid"));
 			if (possibleId > max) {
 				return [possibleId, arr];
@@ -168,6 +168,10 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		};
 	}
 	
+	function chooseMethodMapping() {
+		return defaultMethodMappingMod();
+	}
+	
 	function mapNodes(clNode,masterLevel,nodeMapping){
 		
 		for(var i=0; i<clNode.childNodes.length;i++){
@@ -177,30 +181,32 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			if(node.childNodes.length>0) {
 				mapNodes(node,masterLevel+"."+(i+1),nodeMapping)
 			}else{
-				if(node.parentNode.childNodes.length==1)
+				if(node.nodeName!="BR"){
+					if(node.parentNode.childNodes.length==1)
 					{
 						var ttpTrackingId = masterLevel;
 						editor.dom.setAttrib(node.parentNode, 'data-ttpid', ttpTrackingId);
 						editor.dom.setAttrib(node.parentNode, 'data-process-status', 'preprocess');
 						nodeMapping[ttpTrackingId] = node.wholeText;
 					}else{
-						var parNode = node.parentNode;
-						var sp1 = document.createElement("span");
-						var sp1_content = document.createTextNode(node.data);
-						sp1.appendChild(sp1_content);
-						node.parentNode.replaceChild(sp1, node);
-						
+						var sp1 = wrapSinglChildNode(node);
 						var ttpTrackingId = masterLevel+"."+(i+1);
 						editor.dom.setAttrib(sp1, 'data-ttpid', ttpTrackingId);
 						editor.dom.setAttrib(sp1, 'data-process-status', 'preprocess');
 						nodeMapping[ttpTrackingId] = sp1.innerText;
 					}
+				}
 			}		
 		}
 	}
-
-	function chooseMethodMapping() {
-		return defaultMethodMappingMod();
+	
+	function wrapSinglChildNode(node){
+		if(node.nodeName!=="#text") return node;
+		var sp1 = document.createElement("span");
+		var sp1_content = document.createTextNode(node.data);
+		sp1.appendChild(sp1_content);
+		node.parentNode.replaceChild(sp1, node);
+		return sp1;
 	}
 
 	function produceProcessingContainer(mk, initValueId) {
@@ -209,16 +215,17 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		return function(block) {
 			var clearBlock = removeClass(block.className, 'ttp-chosenblock', function(clazz) {
 				var copy = block.cloneNode(true);
+				if(copy.childNodes.length==1)
+					wrapSinglChildNode(copy.childNodes[0]);
 				copy.className = clazz;
 				return copy;
 			});
-			
+				
 			var bl;
 			var content;
 			switch (block.nodeName) {
-				case 'TD':
+				case 'TD':				
 					content = [].slice.call(clearBlock.children);
-				
 					bl = clearBlock;
 					while (bl.firstChild) bl.removeChild(bl.firstChild); // remove children
 					break;
@@ -244,11 +251,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 					// Dirty hack
 					pr.appendChild(el[0]);
 					Object.assign(acc, el[1]);
-					
 					return acc;
 				}, {});
 
-			
 			bl.appendChild(or);
 			bl.appendChild(pr);
 			return [block, bl, mapped];
@@ -256,15 +261,13 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	}
 
 	editor.addCommand('ttpProcessingBlocks', function() {
-		var blocks = editor.$(".ttp-chosenblock, .ttp-processingblock");
+		var blocks = editor.$(".ttp-chosenblock, .ttp-processingblock, .ttp-processedblock");
 		blocks.reduce = Array.prototype.reduce;
 	
 		var maxAndFilterList = blocks.reduce(reduceToFilterListAndMax, [0, []]);
 		var nextId = maxAndFilterList[0] + 1;
 		var procBlocks = maxAndFilterList[1];
 		
-		
-
 		var mk = editor.dom.create.bind(editor.dom);
 		var dataToDecode = {};
 		var mapped = procBlocks

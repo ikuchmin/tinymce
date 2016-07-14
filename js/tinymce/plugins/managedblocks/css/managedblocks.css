@@ -14,7 +14,7 @@
     display: none;
 }
 
-.ttp-processedblock{
+.ttp-managedblocks .ttp-processedblock{
 	background-color: greenyellow;
 }
 
