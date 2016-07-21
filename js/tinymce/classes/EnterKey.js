@@ -240,6 +240,12 @@ define("tinymce/EnterKey", [
 					caretNode.innerHTML = '<br data-mce-bogus="1">';
 				}
 
+                if(settings.reomve_classes_new_block){
+                    while(block.classList.length>0){
+                        block.classList.remove(block.classList[0]);
+                   }
+                }
+
 				return block;
 			}
 
