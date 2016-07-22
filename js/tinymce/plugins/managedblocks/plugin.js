@@ -67,11 +67,12 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var sP = getRootElement(editor.selection.getStart())
 		var eP = getRootElement(editor.selection.getEnd())
 		var section = editor.selection.getNode().childNodes;
-		
+
 		var startSelect = false;
 		
 		for(var i=0;i<section.length;i++){
-			if(!editor.dom.hasClass(section[i], 'mce-item-table','mce-resize-bar','mce-resize-bar-row')){
+			if(section[i].nodeName!="TABLE"){
+			    console.dir(section[i]);
 				if(startSelect){
 					logicalBlock(section[i])();
 					if(section[i]==eP){
