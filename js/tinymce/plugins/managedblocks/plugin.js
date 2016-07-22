@@ -295,14 +295,14 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		cmd: 'mceManagedBlocks',
 		onPostRender: toggleActiveState,
 		icon: true,
-		image: 'https://pdfimages.wondershare.com/pdfelement-mac/guide/icon-11-convert.png'
+		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAtklEQVR42t3SMQrCQBCF4W20MkcwibewzD08TUDbQNSDpNB0gq3BIwRyBu1soi/wL4wRiYWNDnwQhplhdzbO/W0EksgCCbnBmEshN6nlgJpcQc1LjGUrF0llSj6CI5dSs5GRb+4+SjlJaIZm0iIz+ZDa0g9ZSyUTUxTReEdrTuKoreh1uZx7SxoaENCT+yvsScQfXCGmdtffQ7eYqyzNILvEmayoeVriu2ds5Ihm6Bm/9iP9YDwAa200ktDK150AAAAASUVORK5CYII="
 	});
 
 	editor.addButton('ttpchooselogicalblock', {
 		title: 'Choose logical block',
 		cmd: 'ttpChooseLogicalBlock',
 			icon: true,
-		image: 'https://d30y9cdsu7xlg0.cloudfront.net/png/37722-200.png'
+		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAANklEQVR42mNgGMwgEYj/QXEiOQbUA/F/KK4fGgbA/PyfAMYZJvVEaMbrIopdMAxigeopcYgAABH0N8WH6Z4wAAAAAElFTkSuQmCC"
 
 	});
 
