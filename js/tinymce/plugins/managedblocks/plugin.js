@@ -72,7 +72,6 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		
 		for(var i=0;i<section.length;i++){
 			if(section[i].nodeName!="TABLE"){
-			    console.dir(section[i]);
 				if(startSelect){
 					logicalBlock(section[i])();
 					if(section[i]==eP){
