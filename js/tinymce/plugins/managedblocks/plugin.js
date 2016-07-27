@@ -71,7 +71,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		var startSelect = false;
 		
 		for(var i=0;i<section.length;i++){
-			if(section[i].nodeName!="TABLE"){
+		    if (!~'TABLEDOCUMENTID'.indexOf(section[i].nodeName))
+			{
 				if(startSelect){
 					logicalBlock(section[i])();
 					if(section[i]==eP){
@@ -196,7 +197,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 						nodeMapping[ttpTrackingId] = sp1.innerText;
 					}
 				}
-			}		
+			}
 		}
 	}
 	
