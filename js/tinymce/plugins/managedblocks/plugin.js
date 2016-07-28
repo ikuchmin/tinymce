@@ -239,25 +239,24 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			var currId = nextId++;
 			editor.dom.addClass(bl, 'ttp-processingblock');
 			editor.dom.setAttrib(bl, 'data-ttpid', currId);
+			editor.dom.setAttrib(bl, 'data-process-status', 'preprocess');
 
 			var or = mk('div', {'class': 'origin viewed'});
+			var pr = mk('div', {'class': 'processed'});
+
 			content.forEach(function(node) {
 				or.appendChild(node);
-			});
+				pr.appendChild(node.cloneNode(true));
 
-			var pr = mk('div', {'class': 'processed'});
-			var mapped = content
-				.map(chooseMethodMapping().bind({currId: currId}))
-				.reduce(function(acc, el) {
-					// Dirty hack
-					pr.appendChild(el[0]);
-					Object.assign(acc, el[1]);
-					return acc;
-				}, {});
+			});
 
 			bl.appendChild(or);
 			bl.appendChild(pr);
-			return [block, bl, mapped];
+
+           var mapped ={};
+           mapped[currId] = block.innerText;
+
+           return [block, bl, mapped];
 		};
 	}
 
