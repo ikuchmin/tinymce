@@ -91,6 +91,28 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		if(!startSelect) logicalBlock(editor.selection.getNode())();
 	});
 
+	editor.addCommand('ttpChooseAllLogicalBlock', function() {
+        var body = editor.dom.select('body')[0];
+        var nodes = body.childNodes;
+        for(var i=0;i<nodes.length;i++){
+
+            if (!~'TABLEDOCUMENTID'.indexOf(nodes[i].nodeName)){logicalBlock(nodes[i])();}
+            else if(~'TABLE'.indexOf(nodes[i].nodeName)){
+                var trList = nodes[i].childNodes[0].childNodes;
+                var cells = [];
+                for(trId in trList){
+                    tr = trList[trId];
+                    for(cellId in tr.childNodes){
+                        cell = tr.childNodes[cellId];
+                        if(~'TD'.indexOf(cell.nodeName) && cell.textContent.trim().length!=0) cells.push(cell);
+                    }
+                }
+                editor.fire('ttp-selectblock', cells, false);
+            }
+        }
+
+    });
+
 	editor.addCommand('mceManagedBlocks', function() {
 		var dom = editor.dom, linkElm;
 
