@@ -31,10 +31,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	
 
 	function logicalBlock(element) {
-	    if(element.textContent.trim().length==0)return () => {};
-
-		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
+	   	var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
+		    if(element.textContent.trim().length==0)return function () {};
 			return function() {
 				element = getRootElement(element);
 				editor.fire('ttp-selectblock', [element], false);

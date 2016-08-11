@@ -553,7 +553,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 			each(grid, function(row) {
 				each(row, function(cell) {
-					cells.push(cell);
+					if(cell.elm.textContent.trim().length!=0) cells.push(cell);
 				});
 			});
 
