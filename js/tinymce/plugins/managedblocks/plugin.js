@@ -31,6 +31,8 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	
 
 	function logicalBlock(element) {
+	    if(element.textContent.trim().length==0)return () => {};
+
 		var checkOnTable = editor.dom.getParent(element, 'th,tr,td');
 		if (checkOnTable == null) {
 			return function() {
