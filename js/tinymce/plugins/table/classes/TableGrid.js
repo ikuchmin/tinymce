@@ -549,57 +549,77 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 		function getAllCells(grid) {
-			var cells = [];
+            var cells = [];
 
-			each(grid, function(row) {
-				each(row, function(cell) {
-					if(cell.elm.textContent.trim().length!=0) cells.push(cell);
-				});
-			});
+            each(grid, function(row) {
+                each(row, function(cell) {
+                    cells.push(cell);
+                });
+            });
 
-			return cells;
-		}
+            return cells;
+        }
 
-		function selectCells() {
-			var selectedCells = getSelectedCells(grid).map(function(el) {
-				return el.elm;
-			});
-			
-			editor.fire('ttp-selectblock', selectedCells, false);
-		}
-		
-		function selectTable() {
-			var selectedCells = getAllCells(grid).map(function(el) {
-				return el.elm;
-			});
-			
-			editor.fire('ttp-selectblock', selectedCells, false);
-		}
-		
-		function selectRow() {
-			editor.fire('ttp-selectblock', getSelectedCells(grid)[0].elm.parentNode.childNodes, false);
-		}
-		
-		function selectColumn() {
-			var posX;
+        function selectCells() {
+            var selectedCells = getSelectedCells(grid).map(function(el) {
+                return el.elm;
+            });
 
-			// Find position
-			each(grid, function(row) {
-				each(row, function(cell, x) {
-					if (isCellSelected(cell)) {
-						posX = x;
-					}
-				});
-			});
-			
-			
-			var selectedCells = [];
-			for(var i in grid){
-				selectedCells.push(grid[i][posX].elm)
-			}
-			
-			editor.fire('ttp-selectblock', selectedCells, false);
-		}
+            selectedCells = filterEmptyCell(selectedCells);
+
+            editor.fire('ttp-selectblock', selectedCells, false);
+        }
+
+        function selectTable() {
+            var selectedCells = getAllCells(grid).map(function(el) {
+                return el.elm;
+            });
+
+            selectedCells = filterEmptyCell(selectedCells);
+
+            editor.fire('ttp-selectblock', selectedCells, false);
+        }
+
+        function selectRow() {
+            var selectedCells = filterEmptyCell(getSelectedCells(grid)[0].elm.parentNode.childNodes);
+
+            editor.fire('ttp-selectblock', selectedCells, false);
+        }
+
+        function selectColumn() {
+            var posX;
+
+            // Find position
+            each(grid, function(row) {
+                each(row, function(cell, x) {
+                    if (isCellSelected(cell)) {
+                        posX = x;
+                    }
+                });
+            });
+
+
+            var selectedCells = [];
+            for(var i in grid){
+                selectedCells.push(grid[i][posX].elm)
+            }
+
+            selectedCells = filterEmptyCell(selectedCells);
+
+            editor.fire('ttp-selectblock', selectedCells, false);
+        }
+
+
+        function filterEmptyCell(cells){
+            var retValue = [];
+
+            for(var id in cells){
+                var cell = cells[id];
+                if(cell.nodeName=='TD' && cell.textContent.trim().length!=0) retValue.push(cell);
+            }
+
+            return retValue;
+        }
 		
 		function deleteCols() {
 			var cols = [];
