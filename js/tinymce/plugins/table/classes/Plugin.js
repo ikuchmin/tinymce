@@ -425,6 +425,14 @@ define("tinymce/tableplugin/Plugin", [
 				grid.pasteRows(clipboardRows);
 			},
 
+			mceSplitColsBefore: function(grid) {
+				grid.splitCols(true);
+			},
+
+			mceSplitColsAfter: function(grid) {
+				grid.splitCols(false);
+			},
+
 			mceTableDelete: function(grid) {
 				if (resizeBars) {
 					resizeBars.clearBars();
@@ -606,6 +614,14 @@ define("tinymce/tableplugin/Plugin", [
 			);
 		}
 
+		function getClipboardRows() {
+			return clipboardRows;
+		}
+
+		function setClipboardRows(rows) {
+			clipboardRows = rows;
+		}
+
 		addButtons();
 		addToolbars();
 
@@ -636,6 +652,8 @@ define("tinymce/tableplugin/Plugin", [
 		}
 
 		self.insertTable = insertTable;
+		self.setClipboardRows = setClipboardRows;
+		self.getClipboardRows = getClipboardRows;
 	}
 
 	PluginManager.add('table', Plugin);
