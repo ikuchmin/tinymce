@@ -377,7 +377,13 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			} else if (!d.hasClass(block, 'ttp-processingblock') && !d.hasClass(block, 'ttp-processedblock')) {
 				editor.dom.addClass(block, 'ttp-chosenblock');
 			}
-			
+
+			if(d.hasClass(block, 'ttp-reprocess')) {
+              editor.dom.removeClass(block, 'ttp-reprocess');
+			}
+			else if(d.hasClass(block, 'ttp-processedblock')) {
+			   editor.dom.addClass(block, 'ttp-reprocess');
+			}
 		});
 	});
 });

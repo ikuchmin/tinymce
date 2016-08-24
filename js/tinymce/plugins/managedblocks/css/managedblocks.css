@@ -18,6 +18,10 @@
 	background-color: greenyellow;
 }
 
+.ttp-processedblock.ttp-reprocess{
+   background-color: darkgray;
+}
+
 .ttp-managedblocks p {
 	padding-top: 10px;
 	border: 1px dashed #BBB;
