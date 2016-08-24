@@ -200,8 +200,6 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		
 		for(var i=0; i<clNode.childNodes.length;i++){
 			node = clNode.childNodes[i];
-			//editor.dom.setAttrib(node, 'data-ttpid', masterLevel+"."+(i+1));
-			//editor.dom.setAttrib(node, 'data-process-status', 'preprocess');
 			if(node.childNodes.length>0) {
 				mapNodes(node,masterLevel+"."+(i+1),nodeMapping)
 			}else{
@@ -339,9 +337,29 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	});
 
 
+    function DelayedSubmission() {
+        var date = new Date();
+        initial_time = date.getTime();
+        if (typeof setInverval_Variable == 'undefined') {
+                setInverval_Variable = setInterval(DelayedSubmission_Check, 50);
+        }
+    }
+    function DelayedSubmission_Check() {
+        var date = new Date();
+        check_time = date.getTime();
+        var limit_ms=check_time-initial_time;
+        if (limit_ms > editor.settings.delay_markup) { //Change value in milliseconds
+            editor.settings.markUpFunction(editor.selection.getNode());
+            clearInterval(setInverval_Variable);
+            delete setInverval_Variable;
+        }
+    }
+
 	editor.on('init', function() {
 		editor.iframeElement.contentDocument.addEventListener('click', showOriginContent, false);
-		
+		if(editor.settings.isMarkUp)
+		    editor.iframeElement.contentDocument.addEventListener('keydown', DelayedSubmission , false);
+
 		if (editor.settings.managedblocks_default_state) {
 			editor.execCommand('mceManagedBlocks', false, null, {skip_focus: true});
 		}
