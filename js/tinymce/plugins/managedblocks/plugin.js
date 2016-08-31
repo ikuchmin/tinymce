@@ -322,9 +322,9 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 	editor.addButton('ttpchooselogicalblock', {
 		title: 'Choose logical block',
 		cmd: 'ttpChooseLogicalBlock',
-			icon: true,
-		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAANklEQVR42mNgGMwgEYj/QXEiOQbUA/F/KK4fGgbA/PyfAMYZJvVEaMbrIopdMAxigeopcYgAABH0N8WH6Z4wAAAAAElFTkSuQmCC"
-
+        icon: true,
+        classes: 'choseLogicBlock',
+        image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAFiSURBVHja7JhNSgNBEEbfxFER8QK6ElyqoGbnBTyFotcI6Crg0gMI8RhZKLhw6U4x0YXi3wUSXRgnM24+oWkSE81MaLAKCma6e5pHdX1VzURZlhGylQjcDNAADdAA/ztgPOzCcqX+0/QMsA2U9X4F1IB2vw8uq1v5Ag6wBWAXWNN7AzgFbkI54kVgA5iSrwJLoeVg13lOQhNJJrcy81d7B1JvrDXWMqNSMi9BuJZKIO5eEbCpAJS88SfgFXjLG3AP2AFWegDGUq+77wHw2QOwCZwAR3kDrssnhlw/KfdtWV5IDuah1LQokVyrQyQ6um/v9Kl7Xc25axPgHrgrQiTHQF0dInLGP9SD9508TIBD4AKY9vZ5AJ6LAGwrgo0ecy2g4qXCGXAeSh2c9aIKMBd6J4ms1f0yWnEB98zcAF90i+5I1U3gcdy9eBBgTRdVgFv13NGPxv5uGaABGqABGuBI9jUACthJmIPrqzwAAAAASUVORK5CYII="
 	});
 
 	editor.addMenuItem('managedblocks', {
