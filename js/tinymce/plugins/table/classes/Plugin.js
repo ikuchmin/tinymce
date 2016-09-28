@@ -462,7 +462,12 @@ define("tinymce/tableplugin/Plugin", [
 
             mceTableGetDataFromCellsSpecial: function(grid) {
                             grid.getDataFromCellsSpecial();
+            },
+
+            mceTableGetCellInfo: function(grid) {
+                            grid.getCellInfo();
             }
+
 			
 			
 		}, function(func, name) {

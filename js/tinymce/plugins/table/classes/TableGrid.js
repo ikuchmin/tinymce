@@ -683,21 +683,34 @@ define("tinymce/tableplugin/TableGrid", [
         }
 
         function getDataFromCellsSpecial(){
-                        var retValue = {}
-                        for (var elem in editor.dom.select('.ttp-chosenblock-speicalCell')) {
-                            elem = editor.dom.select('.ttp-chosenblock-speicalCell')[elem];
-                            buildGridSpecial(elem.offsetParent);
-                            var ttpid = elem.attributes.getNamedItem("data-ttpid").nodeValue;
-                            var rowIndex = elem.parentNode.rowIndex;
-                            var selectedRowFull = grid[rowIndex];
-                            var retStringValue = '';
-                            for(var i=0;i<selectedRowFull.length;i++){
-                                retStringValue +=  selectedRowFull[i].elm.innerText;
-                                if(i+2<selectedRowFull.length) retStringValue+='[||]'
-                            }
-                            retValue[ttpid] = retStringValue;
-                        }
-                    editor.settings.docUtil.setCellSpecialData(retValue);
+            var retValue = {}
+            for (var elem in editor.dom.select('.ttp-chosenblock-speicalCell')) {
+                elem = editor.dom.select('.ttp-chosenblock-speicalCell')[elem];
+                buildGridSpecial(elem.offsetParent);
+                var ttpid = elem.attributes.getNamedItem("data-ttpid").nodeValue;
+                var rowIndex = elem.parentNode.rowIndex;
+                var selectedRowFull = grid[rowIndex];
+                var retStringValue = '';
+                for(var i=0;i<selectedRowFull.length;i++){
+                    retStringValue +=  selectedRowFull[i].elm.innerText;
+                    if(i+1!=selectedRowFull.length) retStringValue+='[||]'
+                }
+                retValue[ttpid] = retStringValue.substring(-4);
+            }
+            editor.settings.docUtil.setCellSpecialData(retValue);
+        }
+
+        function getCellInfo(){
+             var cell =  editor.dom.select('[data-ttpid='+editor.cellTTPid+']')[0];
+             buildGridSpecial(cell.offsetParent);
+             var rowIndex = cell.parentNode.rowIndex;
+             var selectedRowFull = grid[rowIndex];
+             var cellNum = -1;
+             for(var i=0;i<selectedRowFull.length;i++){
+                if(selectedRowFull[i].elm==cell) cellNum = i;
+             }
+
+             editor.settings.docUtil.setCurrenCellInfo({ttpid:editor.cellTTPid,size:selectedRowFull.length,cellNum:cellNum});
         }
 
         function selectTable() {
@@ -1127,6 +1140,7 @@ define("tinymce/tableplugin/TableGrid", [
 			selectColumn: selectColumn,
 			selectCellsSpecial: selectCellsSpecial,
 			getDataFromCellsSpecial: getDataFromCellsSpecial,
+			getCellInfo: getCellInfo,
 			setStartCell: setStartCell,
 			setEndCell: setEndCell,
 			moveRelIdx: moveRelIdx,
