@@ -374,6 +374,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		selectedblocks.forEach(function(block) {
 			if(d.hasClass(block, 'ttp-chosenblock')){
 				editor.dom.removeClass(block, 'ttp-chosenblock');
+				editor.dom.removeClass(block, 'ttp-chosenblock-speicalCell');
 			} else if (!d.hasClass(block, 'ttp-processingblock') && !d.hasClass(block, 'ttp-processedblock')) {
 				editor.dom.addClass(block, 'ttp-chosenblock');
 			}

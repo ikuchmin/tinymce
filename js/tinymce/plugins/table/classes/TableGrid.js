@@ -101,6 +101,11 @@ define("tinymce/tableplugin/TableGrid", [
 			});
 		}
 
+		function buildGridSpecial(_table){
+        		    table = _table;
+        		    buildGrid();
+        }
+
 		function fireNewRow(node) {
 			editor.fire('newrow', {
 				node: node
@@ -659,6 +664,42 @@ define("tinymce/tableplugin/TableGrid", [
             editor.fire('ttp-selectblock', selectedCells, false);
         }
 
+
+        function selectCellsSpecial() {
+           selectCells();
+
+           var selectedCells = getSelectedCells(grid).map(function(el) {
+               return el.elm;
+           });
+
+           selectedCells = filterEmptyCell(selectedCells);
+
+           var d = editor.dom;
+           selectedCells.forEach(function(block) {
+               if(d.hasClass(block, 'ttp-chosenblock')){
+                   editor.dom.addClass(block, 'ttp-chosenblock-speicalCell');
+               }
+           });
+        }
+
+        function getDataFromCellsSpecial(){
+                        var retValue = {}
+                        for (var elem in editor.dom.select('.ttp-chosenblock-speicalCell')) {
+                            elem = editor.dom.select('.ttp-chosenblock-speicalCell')[elem];
+                            buildGridSpecial(elem.offsetParent);
+                            var ttpid = elem.attributes.getNamedItem("data-ttpid").nodeValue;
+                            var rowIndex = elem.parentNode.rowIndex;
+                            var selectedRowFull = grid[rowIndex];
+                            var retStringValue = '';
+                            for(var i=0;i<selectedRowFull.length;i++){
+                                retStringValue +=  selectedRowFull[i].elm.innerText;
+                                if(i+2<selectedRowFull.length) retStringValue+='[||]'
+                            }
+                            retValue[ttpid] = retStringValue;
+                        }
+                    editor.settings.docUtil.setCellSpecialData(retValue);
+        }
+
         function selectTable() {
             var selectedCells = getAllCells(grid).map(function(el) {
                 return el.elm;
@@ -1084,6 +1125,8 @@ define("tinymce/tableplugin/TableGrid", [
 			selectTable: selectTable,
 			selectRow: selectRow,
 			selectColumn: selectColumn,
+			selectCellsSpecial: selectCellsSpecial,
+			getDataFromCellsSpecial: getDataFromCellsSpecial,
 			setStartCell: setStartCell,
 			setEndCell: setEndCell,
 			moveRelIdx: moveRelIdx,

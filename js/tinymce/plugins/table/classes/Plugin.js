@@ -454,8 +454,15 @@ define("tinymce/tableplugin/Plugin", [
 			
 			mceTableSelectColumn: function(grid) {
 				grid.selectColumn();
-			}
-			
+			},
+
+            mceTableSelectCellsSpecial: function(grid) {
+                grid.selectCellsSpecial();
+            },
+
+            mceTableGetDataFromCellsSpecial: function(grid) {
+                            grid.getDataFromCellsSpecial();
+            }
 			
 			
 		}, function(func, name) {
@@ -586,6 +593,11 @@ define("tinymce/tableplugin/Plugin", [
 				onclick: cmd('mceTableSelectRow')
 			});
 
+            editor.addButton('tableselectcellspecial', {
+                            title: 'Select cells special',
+                            onclick: cmd('mceTableSelectCellsSpecial')
+            });
+
 		}
 
 		function isTable(table) {
@@ -605,7 +617,8 @@ define("tinymce/tableplugin/Plugin", [
 			if (!toolbarItems) {
 				toolbarItems = 'tableselecttable tableselectcolumn tableselectrow tableselectcells | tableprops tabledelete | ' +
 					'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-					'tableinsertcolbefore tableinsertcolafter tabledeletecol';
+					'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
+					'tableselectcellspecial';
 			}
 
 			editor.addContextToolbar(
