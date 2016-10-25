@@ -697,7 +697,7 @@ define("tinymce/tableplugin/TableGrid", [
                     retStringValue +=  selectedRowFull[i].elm.innerText;
                     if(i+1!=selectedRowFull.length) retStringValue+='[||]'
                 }
-                retValue[ttpid] = {text:retStringValue.substring(-4),cellid:selectedId};
+                retValue[ttpid] = "[cellid]"+selectedId+"[/cellid]"+retStringValue.substring(-4);
             }
             editor.settings.docUtil.setCellSpecialData(retValue);
         }
