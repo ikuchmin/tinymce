@@ -599,7 +599,7 @@ define("tinymce/tableplugin/Plugin", [
 			});
 
             editor.addButton('tableselectcellspecial', {
-                            title: 'Select cells special',
+                            title: 'Select cells',
                             onclick: cmd('mceTableSelectCellsSpecial')
             });
 
@@ -619,11 +619,16 @@ define("tinymce/tableplugin/Plugin", [
 				return;
 			}
 
+//			if (!toolbarItems) {
+//				toolbarItems = 'tableselecttable tableselectcolumn tableselectrow tableselectcells | tableprops tabledelete | ' +
+//					'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
+//					'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
+//					'tableselectcellspecial';
+//			}
 			if (!toolbarItems) {
-				toolbarItems = 'tableselecttable tableselectcolumn tableselectrow tableselectcells | tableprops tabledelete | ' +
+				toolbarItems = 'tableselectcellspecial | tableprops tabledelete | ' +
 					'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-					'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-					'tableselectcellspecial';
+					'tableinsertcolbefore tableinsertcolafter tabledeletecol';
 			}
 
 			editor.addContextToolbar(
