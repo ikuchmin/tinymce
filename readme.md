@@ -3,14 +3,15 @@ TinyMCE - The JavaScript Rich Text editor
 
 Building TinyMCE
 -----------------
-<<<<<<< HEAD
+
 1. Install Node.js
 2. Open a console and go to the project directory
 3. Write "npm i -g grunt-cli" to install the grunt command line tool globally.
 4. Write "npm i" to install all package dependencies.
 4. Build TinyMCE by writing "grunt"
 5. Build, with skipping tests "grunt force-build"
-=======
+
+
 Install [Node.js](https://nodejs.org/en/) on your system.
 Clone this repository on your system
 ```
@@ -32,7 +33,7 @@ Now, build TinyMCE by using `grunt`.
 ```
 $ grunt
 ```
->>>>>>> ab1d608c635252224b35610aa14c8f3b3ad1e9b5
+
 
 Build tasks
 ------------

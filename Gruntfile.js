@@ -851,10 +851,6 @@ module.exports = function(grunt) {
 	grunt.registerTask("minify", ["amdlc", "bolt-build", "uglify", "copy", "skin", "less"]);
 	grunt.registerTask("test", ["qunit"]);
 	grunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);
-<<<<<<< HEAD
-	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack"]);
-	grunt.registerTask("force-build", ["bolt-init", "minify", "clean:release", "moxiezip"]);
-=======
 	grunt.registerTask("default", ["lint", "bolt-init", "minify", "test", "clean:release", "moxiezip", "nugetpack", "version"]);
->>>>>>> ab1d608c635252224b35610aa14c8f3b3ad1e9b5
+	grunt.registerTask("force-build", ["bolt-init", "minify", "clean:release", "moxiezip"]);
 };
