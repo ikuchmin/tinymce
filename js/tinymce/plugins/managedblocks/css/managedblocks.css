@@ -173,3 +173,31 @@
 ttp-markup{
   background-color: coral;
 }
+
+answer1{
+  background-color: #dce0e4;
+}
+
+answer2{
+  background-color: rgb(210, 213, 255);
+}
+
+answer3{
+    background-color: #a4f3e9;
+}
+
+entity1{
+  background-color: #dce0e4;
+}
+
+entity2{
+  background-color: rgb(210, 213, 255);
+}
+
+entity3{
+    background-color: #a4f3e9;
+}
+
+entityRed{
+    background-color: rgb(255, 165, 165);
+}
