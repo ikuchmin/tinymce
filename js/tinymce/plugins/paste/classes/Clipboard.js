@@ -55,6 +55,8 @@ define("tinymce/pasteplugin/Clipboard", [
 			args = editor.fire('PastePreProcess', args);
 			html = args.content;
 
+			html = html.replace(/<button[\s\S]*><\/button>|<span>\s*<\/span>|<span[\s\S]*TTP[\s\S]*>[\s\S]*<\/span>|<header[\s\S]*TTP[\s\S]*>[\s\S]*<\/header>|<div[\s\S]*class="TTP[\s\S]*>[\s\S]*<\/div>|<h2[\s\S]*class="TTP[\s\S]*>[\s\S]*<\/h2>|<div id="mce[\s\S]*>[\s\S]*<\/div>|class="ttp-\S+"\sdata-ttpid="\d+"\sdata-process-status="\S+"/g,"");
+
 			if (!args.isDefaultPrevented()) {
 				// User has bound PastePostProcess events then we need to pass it through a DOM node
 				// This is not ideal but we don't want to let the browser mess up the HTML for example
