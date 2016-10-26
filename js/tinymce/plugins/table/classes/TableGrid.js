@@ -691,11 +691,13 @@ define("tinymce/tableplugin/TableGrid", [
                 var rowIndex = elem.parentNode.rowIndex;
                 var selectedRowFull = grid[rowIndex];
                 var retStringValue = '';
+                var selectedId = -1;
                 for(var i=0;i<selectedRowFull.length;i++){
+                    if (selectedRowFull[i].elm==elem) selectedId = i; //console.log("current i: "+i)
                     retStringValue +=  selectedRowFull[i].elm.innerText;
                     if(i+1!=selectedRowFull.length) retStringValue+='[||]'
                 }
-                retValue[ttpid] = retStringValue.substring(-4);
+                retValue[ttpid] = "[cellid]"+selectedId+"[/cellid]"+retStringValue.substring(-4);
             }
             editor.settings.docUtil.setCellSpecialData(retValue);
         }

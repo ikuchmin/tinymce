@@ -39,7 +39,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 				editor.fire('ttp-selectblock', [element], false);
 			};
 		} else {
-			return function() { editor.execCommand('mceTableSelectCells'); };
+			return function() { editor.execCommand('mceTableSelectCellsSpecial'); };
 		}
 	}
 	
