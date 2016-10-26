@@ -40,6 +40,9 @@
 	<script src="tinymce/caret/LineUtils.js"></script>
 	<script src="tinymce/caret/LineWalker.js"></script>
 
+	<!-- tinymce.content.* -->
+	<script src="tinymce/content/LinkTargets.js"></script>
+
 	<!-- tinymce.geom.* -->
 	<script src="tinymce/geom/Rect.js"></script>
 	<script src="tinymce/geom/ClientRect.js"></script>
@@ -51,6 +54,7 @@
 
 	<!-- tinymce.fmt.* -->
 	<script src="tinymce/fmt/Hooks.js"></script>
+	<script src="tinymce/fmt/Preview.js"></script>
 
 	<!-- tinymce.text.* -->
 	<script src="tinymce/text/ExtendingChar.js"></script>
@@ -85,6 +89,7 @@
 	<script src="tinymce/ui/Collection.js"></script>
 	<script src="tinymce/ui/ColorButton.js"></script>
 	<script src="tinymce/ui/Control.js"></script>
+	<script src="tinymce/ui/FilePicker.js"></script>
 	<script src="tinymce/ui/FitLayout.js"></script>
 	<script src="tinymce/ui/FlexLayout.js"></script>
 	<script src="tinymce/ui/GridLayout.js"></script>
@@ -114,7 +119,9 @@
 
 	<!-- tinymce.* -->
 	<script src="tinymce/AddOnManager.js"></script>
+	<script src="tinymce/options.js"></script>
 	<script src="tinymce/Editor.js"></script>
+	<script src="tinymce/Editor_rtl.js"></script>
 	<script src="tinymce/EditorUpload.js"></script>
 	<script src="tinymce/EditorCommands.js"></script>
 	<script src="tinymce/EditorManager.js"></script>
@@ -129,12 +136,14 @@
 	<script src="tinymce/WindowManager.js"></script>
 	<script src="tinymce/InsertContent.js"></script>
 	<script src="tinymce/InsertList.js"></script>
+	<script src="tinymce/NotificationManager.js"></script>
 
 	<!-- tinymce.plugins.* -->
 	<script src="plugins/autolink.js"></script>
 	<script src="plugins/charmap.js"></script>
 	<script src="plugins/autosave.js"></script>
 	<script src="plugins/fullpage.js"></script>
+	<script src="plugins/fullscreen.js"></script>
 	<script src="plugins/image.js"></script>
 	<script src="plugins/importcss.js"></script>
 	<script src="plugins/jquery_plugin.js"></script>
@@ -152,5 +161,6 @@
 	<script src="plugins/table.js"></script>
 	<script src="plugins/textpattern.js"></script>
 	<script src="plugins/wordcount.js"></script>
+	<script src="plugins/toc.js"></script>
 </body>
 </html>

@@ -11,6 +11,47 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('link', function(editor) {
+	var attachState = {};
+
+	function isLink(elm) {
+		return elm && elm.nodeName === 'A' && elm.href;
+	}
+
+	function hasLinks(elements) {
+		return tinymce.util.Tools.grep(elements, isLink).length > 0;
+	}
+
+	function getSelectedLink() {
+		return editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+	}
+
+	function gotoHref() {
+		var targetEl, a = getSelectedLink();
+		if (!a) {
+			return;
+		}
+		if (/^#/.test(a.href)) {
+			targetEl = editor.$(a.href);
+			if (targetEl.length) {
+				editor.selection.scrollIntoView(targetEl[0], true);
+			}
+		} else {
+			window.open(a.href, '_blank');
+		}
+	}
+
+	function toggleViewLinkState() {
+        var self = this;
+
+        editor.on('nodechange', function(e) {
+			if (hasLinks(e.parents)) {
+				self.show();
+			} else {
+				self.hide();
+			}
+		});
+	}
+
 	function createLinkList(callback) {
 		return function() {
 			var linkList = editor.settings.link_list;
@@ -112,8 +153,24 @@ tinymce.PluginManager.add('link', function(editor) {
 			}
 
 			tinymce.each(e.meta, function(value, key) {
-				win.find('#' + key).value(value);
+				var inp = win.find('#' + key);
+
+				if (key === 'text') {
+					if (initialText.length === 0) {
+						inp.value(value);
+						data.text = value;
+					}
+				} else {
+					inp.value(value);
+				}
 			});
+
+			if (meta.attach) {
+				attachState = {
+					href: this.value(),
+					attach: meta.attach
+				};
+			}
 
 			if (!meta.text) {
 				updateText.call(this);
@@ -295,7 +352,7 @@ tinymce.PluginManager.add('link', function(editor) {
 					});
 				}
 
-				function insertLink() {
+				function createLink() {
 					var linkAttrs = {
 						href: href,
 						target: data.target ? data.target : null,
@@ -303,6 +360,11 @@ tinymce.PluginManager.add('link', function(editor) {
 						"class": data["class"] ? data["class"] : null,
 						title: data.title ? data.title : null
 					};
+
+					if (href === attachState.href) {
+						attachState.attach();
+						attachState = {};
+					}
 
 					if (anchorElm) {
 						editor.focus();
@@ -326,6 +388,10 @@ tinymce.PluginManager.add('link', function(editor) {
 							editor.execCommand('mceInsertLink', false, linkAttrs);
 						}
 					}
+				}
+
+				function insertLink() {
+					editor.undoManager.transact(createLink);
 				}
 
 				if (!href) {
@@ -391,9 +457,16 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	this.showDialog = showDialog;
 
+	editor.addMenuItem('gotolink', {
+		text: 'View link',
+		onclick: gotoHref,
+		onPostRender: toggleViewLinkState,
+		prependToContext: true
+	});
+
 	editor.addMenuItem('link', {
 		icon: 'link',
-		text: 'Insert/edit link',
+		text: 'Link',
 		shortcut: 'Meta+K',
 		onclick: createLinkList(showDialog),
 		stateSelector: 'a[href]',
