@@ -174,20 +174,8 @@ ttp-markup{
   background-color: coral;
 }
 
-answer1{
-  background-color: #dce0e4;
-}
-
-answer2{
-  background-color: rgb(210, 213, 255);
-}
-
-answer3{
-    background-color: #a4f3e9;
-}
-
 entity1{
-  background-color: #dce0e4;
+  background-color: #66b3ff;
 }
 
 entity2{
@@ -196,6 +184,18 @@ entity2{
 
 entity3{
     background-color: #a4f3e9;
+}
+
+.unsure1{
+  background-color: #ffbc66;
+}
+
+.unsure2{
+  background-color: rgb(255, 216, 193);
+}
+
+.unsure3{
+  background-color: rgb(224, 177, 177);
 }
 
 entityRed{
