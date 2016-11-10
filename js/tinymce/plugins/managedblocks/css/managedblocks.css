@@ -174,15 +174,15 @@ ttp-markup{
   background-color: coral;
 }
 
-entity1{
+.entity1{
   background-color: #66b3ff;
 }
 
-entity2{
+.entity2{
   background-color: rgb(210, 213, 255);
 }
 
-entity3{
+.entity3{
     background-color: #a4f3e9;
 }
 
@@ -198,6 +198,6 @@ entity3{
   background-color: rgb(224, 177, 177);
 }
 
-entityRed{
+.entityRed{
     background-color: rgb(255, 165, 165);
 }
