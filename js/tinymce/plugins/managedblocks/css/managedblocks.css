@@ -6,6 +6,10 @@
     background-color: rgba(14, 104, 167, 0.81);
 }
 
+.ttp-managedblocks .ttp-errorprocessing {
+    background-color: rgba(255, 0, 0, 0.4)!important
+}
+
 .ttp-managedblocks .ttp-processingblock .processed {
     display: none;
 }
