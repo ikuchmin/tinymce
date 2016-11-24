@@ -281,6 +281,40 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 		};
 	}
 
+	editor.addCommand('ttpGetSelection', function() {
+        var sP = getRootElement(editor.selection.getStart())
+        var eP = getRootElement(editor.selection.getEnd())
+        var section = editor.selection.getNode().childNodes;
+
+
+
+        editor.settings.ppA.variable.selectedText = editor.selection.getContent({format : "text"});
+	});
+
+
+    //TO-DO возможно надо будет удалить
+    editor.addCommand('ttpGetBlock', function() {
+         function getRootElement(e){
+            if (e.nodeName=="BODY") return null;
+            while(e.parentNode.nodeName != "BODY" ){
+                    if(e.nodeName == "TD") return e;
+                    e = e.parentNode
+            }
+            return e;
+        }
+
+
+        var sP = getRootElement(editor.selection.getStart())
+        var eP = getRootElement(editor.selection.getEnd())
+        var section = editor.selection.getNode().childNodes;
+
+        var zz = getRootElement(editor.selection.getNode())
+        console.dir(editor.selection.getNode())
+        console.dir(zz)
+
+//        editor.settings.ppA.variable.selectedText = editor.selection.getContent({format : "text"});
+    });
+
 	editor.addCommand('ttpProcessingBlocks', function() {
 		var blocks = editor.$(".ttp-chosenblock, .ttp-processingblock, .ttp-processedblock");
 		blocks.reduce = Array.prototype.reduce;

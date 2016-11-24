@@ -464,6 +464,10 @@ define("tinymce/tableplugin/Plugin", [
                             grid.getDataFromCellsSpecial();
             },
 
+            mceTableFindSelectedRow: function(grid) {
+                            grid.findSelectedRow();
+            },
+
             mceTableGetCellInfo: function(grid) {
                             grid.getCellInfo();
             }

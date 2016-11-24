@@ -702,6 +702,31 @@ define("tinymce/tableplugin/TableGrid", [
             editor.settings.docUtil.setCellSpecialData(retValue);
         }
 
+        function findSelectedRow(){
+
+            function getRootElement(e){
+                if (e.nodeName=="BODY") return e;
+                while(e.parentNode.nodeName != "BODY" ){
+                        if(e.nodeName == "TR") return e;
+                        e = e.parentNode
+                }
+                return e;
+            }
+
+             var elem = editor.selection.getNode().parentElement;
+             elem = getRootElement(elem);
+
+             if (elem.offsetParent!=null && elem.offsetParent.nodeName=="TABLE"){
+                   buildGridSpecial(elem.offsetParent);
+                   var rowIndex = elem.rowIndex;
+                   var selectedRowFull = grid[rowIndex];
+                   editor.settings.docUtil.setCellSpecialData(selectedRowFull[1].elm.innerText);
+             }else{
+                   editor.settings.docUtil.setCellSpecialData(null);
+             }
+
+        }
+
         function getCellInfo(){
              var cell =  editor.dom.select('[data-ttpid='+editor.cellTTPid+']')[0];
              buildGridSpecial(cell.offsetParent);
@@ -1146,7 +1171,8 @@ define("tinymce/tableplugin/TableGrid", [
 			setStartCell: setStartCell,
 			setEndCell: setEndCell,
 			moveRelIdx: moveRelIdx,
-			refresh: buildGrid
+			refresh: buildGrid,
+			findSelectedRow: findSelectedRow
 		});
 	};
 });
