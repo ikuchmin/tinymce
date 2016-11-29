@@ -705,7 +705,7 @@ define("tinymce/tableplugin/TableGrid", [
         function findSelectedRow(){
 
             function getRootElement(e){
-                if (e.nodeName=="BODY") return e;
+                if (e.nodeName=="BODY" || e.nodeName=="HTML") return e;
                 while(e.parentNode.nodeName != "BODY" ){
                         if(e.nodeName == "TR") return e;
                         e = e.parentNode
