@@ -62,7 +62,7 @@ tinymce.PluginManager.add('wordcount_selected', function(editor) {
         var date = new Date();
         check_time = date.getTime();
         var limit_ms=check_time-initial_time;
-        if (limit_ms > 100) { //Change value in milliseconds
+        if (limit_ms > 10) { //Change value in milliseconds
             update();
             clearInterval(setInverval_Variable);
             delete setInverval_Variable;
@@ -70,7 +70,20 @@ tinymce.PluginManager.add('wordcount_selected', function(editor) {
     }
 
 	self.getCount = function() {
-        var tx = editor.selection.getContent();
+
+	    var selectedInTiny = editor.dom.select('[data-mce-selected="1"]');
+	    var tx = editor.selection.getContent();
+
+	    if(selectedInTiny.length<2){
+	    }else{
+	        tx = "";
+	        for(var i=0; i< selectedInTiny.length;i++){
+	            if (selectedInTiny[i].nodeName == "TD"){
+	                tx = tx + " " + selectedInTiny[i].innerHTML
+	            }
+	        }
+	    }
+
 		var tc = 0;
 
 		if (tx) {
