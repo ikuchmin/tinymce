@@ -179,15 +179,15 @@ ttp-markup{
 }
 
 .entity1{
-  background-color: #66b3ff;
+  background-color: #66b3ff!important;
 }
 
 .entity2{
-  background-color: rgb(210, 213, 255);
+  background-color: rgb(210, 213, 255)!important;
 }
 
 .entity3{
-    background-color: #a4f3e9;
+    background-color: #a4f3e9!important;
 }
 
 .unsure1{
