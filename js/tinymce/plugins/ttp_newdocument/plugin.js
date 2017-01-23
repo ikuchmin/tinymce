@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('ttp_newdocument', function(editor) {
 
     editor.addCommand('ttpNewDocument', function() {
-        editor.settings.core.docUtil.actionOnNotSavedDoc = () => {
+        editor.settings.core.docUtil.actionOnNotSavedDoc = function () {
             editor.setContent('');
             editor.settings.core.docUtil.rememberDocument();
         };
