@@ -740,6 +740,25 @@ define("tinymce/tableplugin/TableGrid", [
              editor.settings.docUtil.setCurrenCellInfo({ttpid:editor.cellTTPid,size:selectedRowFull.length,cellNum:cellNum});
         }
 
+        function insertTradeMarkText(){
+           var selectedCells = getSelectedCells(grid).map(function(el) {
+               return el.elm;
+           });
+
+           if(selectedCells.length!=1){
+              return
+           }
+
+           var cellIndex = selectedCells[0].cellIndex
+
+           for(var y=0;y<grid.length;y++){
+                if(cellIndex<grid[y].length){
+                        var currentCell = grid[y][cellIndex];
+                        currentCell.elm.innerHTML += editor.settings.core.specText.tradeMarkText;
+                }
+           }
+        }
+
         function selectTable() {
             var selectedCells = getAllCells(grid).map(function(el) {
                 return el.elm;
@@ -1172,7 +1191,8 @@ define("tinymce/tableplugin/TableGrid", [
 			setEndCell: setEndCell,
 			moveRelIdx: moveRelIdx,
 			refresh: buildGrid,
-			findSelectedRow: findSelectedRow
+			findSelectedRow: findSelectedRow,
+			insertTradeMarkText:insertTradeMarkText
 		});
 	};
 });

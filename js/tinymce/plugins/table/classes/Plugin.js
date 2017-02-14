@@ -451,6 +451,10 @@ define("tinymce/tableplugin/Plugin", [
 			mceTableSelectTable: function(grid) {
 				grid.selectTable();
 			},
+
+			mceTableInsertTradeMarkText:function(grid){
+            			    grid.insertTradeMarkText();
+            },
 			
 			mceTableSelectColumn: function(grid) {
 				grid.selectColumn();
