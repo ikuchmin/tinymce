@@ -682,35 +682,13 @@ define("tinymce/tableplugin/TableGrid", [
            });
         }
 
-        function elementPrepare(element){
-                    element.innerHTML = regexPrepare(element.innerHTML)
-                    var tw = document.createTreeWalker(element, NodeFilter.SHOW_ALL);
-                    while (tw.nextNode()) {
-                        var currNode = tw.currentNode;
-                        if(currNode.nodeName=="SUP"){
-                            currNode.innerHTML = superscriptPrepare(currNode.innerHTML);
-                        }
-                    }
-                }
-
-        function superscriptPrepare (string){
-             string = string.replace(/0/g, "⁰");
-             string = string.replace(/1/g, "¹");
-             string = string.replace(/2/g, "²");
-             string = string.replace(/3/g, "³");
-             string = string.replace(/4/g, "⁴");
-             string = string.replace(/5/g, "⁵");
-             string = string.replace(/6/g, "⁶");
-             string = string.replace(/7/g, "⁷");
-             string = string.replace(/8/g, "⁸");
-             string = string.replace(/9/g, "⁹");
-             return string;
+        function elementInvert(element){
+                     element.innerHTML = element.innerHTML.replace(/\[superscript\]/g,"<sup>").replace(/\[\/superscript\]/g,"</sup>").replace(/\[subscript\]/g,"<sub>").replace(/\[\/subscript\]/g,"</sub>");
         }
 
-        function regexPrepare (string){
-             string = string.replace( /\u200C/g, "" );
-             string = string.replace(/<sup>[0oOоО]<\/sup>/g, "°");
-             return string;
+        function elementPrepare(element){
+              element.innerHTML = element.innerHTML.replace(/<sup>/g,"[superscript]").replace(/<\/sup>/g,"[/superscript]").replace(/<sub>/g,"[subscript]").replace(/<\/sub>/g,"[/subscript]");
+              element.innerHTML = element.innerHTML.replace( /\u200C/g, "" );
         }
 
         function getDataFromCellsSpecial(){
@@ -728,6 +706,7 @@ define("tinymce/tableplugin/TableGrid", [
                     elementPrepare(selectedRowFull[i].elm)
                     retStringValue +=  selectedRowFull[i].elm.innerText;
                     if(i+1!=selectedRowFull.length) retStringValue+='[||]'
+                    elementInvert(selectedRowFull[i].elm)
                 }
                 retValue[ttpid] = "[cellid]"+selectedId+"[/cellid]"+retStringValue.substring(-4);
             }

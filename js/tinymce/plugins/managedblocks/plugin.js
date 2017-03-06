@@ -283,7 +283,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 
 	editor.addCommand('ttpGetSelection', function() {
 	    editor.settings.ppA.variable.singleElement = editor.selection.getStart()===editor.selection.getEnd();
-        editor.settings.ppA.variable.selectedText = editor.selection.getContent({format : "text"});
+        editor.settings.ppA.variable.selectedText = editor.selection.getContent();
         editor.settings.ppA.variable.selectedBookmark = editor.selection.getBookmark();
 	});
 
