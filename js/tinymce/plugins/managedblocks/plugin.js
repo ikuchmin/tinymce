@@ -414,6 +414,7 @@ tinymce.PluginManager.add('managedblocks', function(editor, url) {
 			}
 			else if(d.hasClass(block, 'ttp-processedblock')) {
 			   editor.dom.addClass(block, 'ttp-reprocess');
+			   editor.dom.addClass(block, 'ttp-chosenblock');
 			}
 		});
 	});
