@@ -20,6 +20,24 @@ tinymce.PluginManager.add('ttp_add_text', function(editor) {
             cmd: 'addheadertext'
         });
 
+        editor.addCommand('addflagok', function() {
+           editor.insertContent(editor.settings.core.specText.flagok);
+        });
+
+        editor.addMenuItem('addflagok', {
+            text: 'Add flag ok',
+            cmd: 'addflagok'
+        });
+
+        editor.addCommand('addflagerror', function() {
+           editor.insertContent(editor.settings.core.specText.flagerror);
+        });
+
+        editor.addMenuItem('addflagerror', {
+            text: 'Add flag error',
+            cmd: 'addflagerror'
+        });
+
         editor.addCommand('addtrademarktext', function() {
             editor.execCommand('mceTableInsertTradeMarkText');
         });
@@ -31,7 +49,7 @@ tinymce.PluginManager.add('ttp_add_text', function(editor) {
 
         var menuItems = [];
 
-        var items = ["addheadertext","addtrademarktext"];
+        var items = ["addheadertext","addtrademarktext","addflagok","addflagerror"];
 
         for(var i=0;i<items.length;i++){
             menuItems.push(editor.menuItems[items[i]]);
